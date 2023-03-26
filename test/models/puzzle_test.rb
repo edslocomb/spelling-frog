@@ -28,7 +28,14 @@ class PuzzleTest < ActiveSupport::TestCase
   end
 
   test "letters are unique" do
-    p = Puzzle.new(letters: "wahortw", required_letter: "w")
+    p = Puzzle.new(letters: "gahortg", required_letter: "g")
+    assert p.invalid?
+  end
+
+  test "letters are sorted" do
+    p = Puzzle.new(letters: "wahorty", required_letter: "w")
+    assert p.valid?
+    p[:letters] = "wahorty" # bypass custom letters=() setter
     assert p.invalid?
   end
 end
