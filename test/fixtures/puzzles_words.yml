@@ -1,9 +1,98 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  puzzle: one
-  word: one
-
-two:
-  puzzle: two
-  word: two
+# one:
+#   puzzle: one
+#   word: one
+gadilmr_agar:
+  puzzle: gadilmr
+  word: "agar"
+gadilmr_alga:
+  puzzle: gadilmr
+  word: "alga"
+gadilmr_algid:
+  puzzle: gadilmr
+  word: "algid"
+gadilmr_amalgam:
+  puzzle: gadilmr
+  word: "amalgam"
+gadilmr_diagram:
+  puzzle: gadilmr
+  word: "diagram"
+gadilmr_drag:
+  puzzle: gadilmr
+  word: "drag"
+gadilmr_gaga:
+  puzzle: gadilmr
+  word: "gaga"
+gadilmr_gala:
+  puzzle: gadilmr
+  word: "gala"
+gadilmr_gall:
+  puzzle: gadilmr
+  word: "gall"
+gadilmr_gamma:
+  puzzle: gadilmr
+  word: "gamma"
+gadilmr_gild:
+  puzzle: gadilmr
+  word: "gild"
+gadilmr_gill:
+  puzzle: gadilmr
+  word: "gill"
+gadilmr_gird:
+  puzzle: gadilmr
+  word: "gird"
+gadilmr_girl:
+  puzzle: gadilmr
+  word: "girl"
+gadilmr_glad:
+  puzzle: gadilmr
+  word: "glad"
+gadilmr_glam:
+  puzzle: gadilmr
+  word: "glam"
+gadilmr_glia:
+  puzzle: gadilmr
+  word: "glia"
+gadilmr_grad:
+  puzzle: gadilmr
+  word: "grad"
+gadilmr_grail:
+  puzzle: gadilmr
+  word: "grail"
+gadilmr_gram:
+  puzzle: gadilmr
+  word: "gram"
+gadilmr_gramma:
+  puzzle: gadilmr
+  word: "gramma"
+gadilmr_grammar:
+  puzzle: gadilmr
+  word: "grammar"
+gadilmr_grid:
+  puzzle: gadilmr
+  word: "grid"
+gadilmr_grill:
+  puzzle: gadilmr
+  word: "grill"
+gadilmr_grim:
+  puzzle: gadilmr
+  word: "grim"
+gadilmr_laggard:
+  puzzle: gadilmr
+  word: "laggard"
+gadilmr_madrigal:
+  puzzle: gadilmr
+  word: "madrigal"
+gadilmr_magi:
+  puzzle: gadilmr
+  word: "magi"
+gadilmr_magma:
+  puzzle: gadilmr
+  word: "magma"
+gadilmr_milligram:
+  puzzle: gadilmr
+  word: "milligram"
+gadilmr_rigid:
+  puzzle: gadilmr
+  word: "rigid"

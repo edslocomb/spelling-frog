@@ -1,9 +1,66 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  letters: MyString
-  name: MyString
-
-two:
-  letters: MyString
-  name: MyString
+agar:
+  name: "agar"
+alga:
+  name: "alga"
+algid:
+  name: "algid"
+amalgam:
+  name: "amalgam"
+diagram:
+  name: "diagram"
+drag:
+  name: "drag"
+gaga:
+  name: "gaga"
+gala:
+  name: "gala"
+gall:
+  name: "gall"
+gamma:
+  name: "gamma"
+gild:
+  name: "gild"
+gill:
+  name: "gill"
+gird:
+  name: "gird"
+girl:
+  name: "girl"
+glad:
+  name: "glad"
+glam:
+  name: "glam"
+glia:
+  name: "glia"
+grad:
+  name: "grad"
+grail:
+  name: "grail"
+gram:
+  name: "gram"
+gramma:
+  name: "gramma"
+grammar:
+  name: "grammar"
+grid:
+  name: "grid"
+grill:
+  name: "grill"
+grim:
+  name: "grim"
+laggard:
+  name: "laggard"
+madrigal:
+  name: "madrigal"
+magi:
+  name: "magi"
+magma:
+  name: "magma"
+milligram:
+  name: "milligram"
+rigid:
+  name: "rigid"
+zebra:
+  name: "zebra"

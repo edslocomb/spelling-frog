@@ -22,11 +22,16 @@ class WordTest < ActiveSupport::TestCase
     assert w.invalid?
   end
 
+  test "words must be unique" do
+    Word.create("flotsam")
+    w = Word.new("flotsam")
+    assert w.invalid?
+  end
+
   # score
 
   test "4-letter word scores 1" do
-    w = Word.new("puce")
-    assert_equal w.score, 1
+    assert_equal Word.new("puce").score, 1
   end
 
   test "5-letter word scores 5" do

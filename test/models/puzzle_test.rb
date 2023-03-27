@@ -38,4 +38,11 @@ class PuzzleTest < ActiveSupport::TestCase
     p[:letters] = "wahorty" # bypass custom letters=() setter
     assert p.invalid?
   end
+
+  # score
+
+  test "fixture puzzle gadilmr has score 106" do
+    p = Puzzle.find_by(letters: "adgilmr", required_letter: "g")
+    assert_equal p.score, 106
+  end
 end
