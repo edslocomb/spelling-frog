@@ -2,7 +2,7 @@ module Lettered
   extend ActiveSupport::Concern
 
   included do
-    validates :letters, presence: true
+    validates :letters, presence: true, length: { maximum: 7 }
     validate :letters_are_unique, :letters_are_sorted
   end
 
