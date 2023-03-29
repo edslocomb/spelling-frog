@@ -3,7 +3,6 @@
 class CreatePuzzles < ActiveRecord::Migration[7.0]
   def change
     create_table :puzzles do |t|
-      t.date :bee_date
       t.string :letters, limit: 7
       t.string :required_letter, limit: 1
 

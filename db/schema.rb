@@ -15,7 +15,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_27_162936) do
   enable_extension "plpgsql"
 
   create_table "puzzles", force: :cascade do |t|
-    t.date "bee_date"
     t.string "letters", limit: 7
     t.string "required_letter", limit: 1
     t.datetime "created_at", null: false
