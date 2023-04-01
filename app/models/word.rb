@@ -30,4 +30,9 @@ class Word < ApplicationRecord
     ret += 7 if letters.length > 6
     ret
   end
+
+  def fits_puzzle(puzzle)
+    chars = letters.chars
+    (chars - puzzle.letters.chars).empty? && chars.include?(puzzle.required_letter)
+  end
 end

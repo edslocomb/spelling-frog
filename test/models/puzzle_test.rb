@@ -45,4 +45,20 @@ class PuzzleTest < ActiveSupport::TestCase
     p = Puzzle.find_by(letters: "adgilmr", required_letter: "g")
     assert_equal p.score, 106
   end
+
+  # import
+
+  test "import puzzles from json" do
+    fixture_word_count = Word.count
+    record = JSON.parse('{"letters":"baekmnt","words":["abate","abatement","abet","abetment","ameba","amebae","baba","babe","babka","bake","banana","bane","bank","bantam","bate","battement","batten","beak","beam","bean","beat","beaten","been","beet","bent","beta","betake","betaken","embank","embankment","kebab","mamba"]}')
+    Puzzle.import!(record)
+    assert Word.count == fixture_word_count + record["words"].length
+  end
+
+  test "import puzzles from json, with keymap" do
+    fixture_word_count = Word.count
+    record = JSON.parse('{"l":"abekmnt","r":"b","w":["abate","abatement","abet","abetment","ameba","amebae","baba","babe","babka","bake","banana","bane","bank","bantam","bate","battement","batten","beak","beam","bean","beat","beaten","been","beet","bent","beta","betake","betaken","embank","embankment","kebab","mamba"]}')
+    Puzzle.import!(record, {letters: "l", required_letter: "r", words: "w"})
+    assert Word.count == fixture_word_count + record["w"].length
+  end
 end
