@@ -2,11 +2,16 @@ import * as React from "react";
 import { Button } from "@mui/material";
 
 interface LetterButtonProps {
+  addToGuess: (letter: string) => void;
   letter: string;
   required?: boolean;
 }
 
-export const LetterButton = ({ letter, required }: LetterButtonProps) => {
+export const LetterButton = ({
+  addToGuess,
+  letter,
+  required,
+}: LetterButtonProps) => {
   const variant = required ? "contained" : "outlined";
   const color = required ? "primary" : "inherit";
   const borderStyle = required
@@ -17,6 +22,7 @@ export const LetterButton = ({ letter, required }: LetterButtonProps) => {
       disableElevation
       variant={variant}
       color={color}
+      onClick={() => addToGuess(letter)}
       sx={{
         ...borderStyle,
         borderRadius: "50%",

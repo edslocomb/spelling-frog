@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import { Box, IconButton, TextField } from "@mui/material";
 import { Backspace, KeyboardReturn, Refresh } from "@mui/icons-material";
 import { useLoaderData } from "react-router-dom";
@@ -32,11 +33,17 @@ const Puzzle = () => {
     ReturnType<typeof loader>
   >;
 
-  const nonRequiredLetters = letters
-    .split("")
-    .filter((l) => l !== requiredLetter);
+  const [guess, setGuess] = useState("");
 
-  let shuffled = shuffle(nonRequiredLetters);
+  const addToGuess = (letter: string) => setGuess(`${guess}${letter}`);
+  const backspaceGuess = () => setGuess(guess.slice(0, -1));
+
+  const [nonRequiredLetters, setNonRequiredLetters] = useState(
+    letters.split("").filter((l) => l !== requiredLetter)
+  );
+
+  const shuffleLetters = () =>
+    setNonRequiredLetters(shuffle(nonRequiredLetters));
 
   const letterButtonColumnSx = {
     display: "flex",
@@ -45,36 +52,67 @@ const Puzzle = () => {
   };
 
   return (
-    <Box>
-      <Box sx={{ display: "flex", justifyContent: "center", padding: "20px" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        alignContent: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Box sx={{ display: "flex", justifyContent: "center", margin: "20px" }}>
         <TextField
           sx={{ fieldSet: { borderColor: "#ddd", borderWidth: "1.5px" } }}
+          value={guess}
         />
       </Box>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Box sx={letterButtonColumnSx}>
-          <LetterButton letter={shuffled[0]} />
-          <LetterButton letter={shuffled[1]} />
+          <LetterButton
+            letter={nonRequiredLetters[0]}
+            addToGuess={addToGuess}
+          />
+          <LetterButton
+            letter={nonRequiredLetters[1]}
+            addToGuess={addToGuess}
+          />
         </Box>
         <Box sx={letterButtonColumnSx}>
-          <LetterButton letter={shuffled[2]} />
-          <LetterButton letter={requiredLetter} required />
-          <LetterButton letter={shuffled[3]} />
+          <LetterButton
+            letter={nonRequiredLetters[2]}
+            addToGuess={addToGuess}
+          />
+          <LetterButton
+            letter={requiredLetter}
+            addToGuess={addToGuess}
+            required
+          />
+          <LetterButton
+            letter={nonRequiredLetters[3]}
+            addToGuess={addToGuess}
+          />
         </Box>
         <Box sx={letterButtonColumnSx}>
-          <LetterButton letter={shuffled[4]} />
-          <LetterButton letter={shuffled[5]} />
+          <LetterButton
+            letter={nonRequiredLetters[4]}
+            addToGuess={addToGuess}
+          />
+          <LetterButton
+            letter={nonRequiredLetters[5]}
+            addToGuess={addToGuess}
+          />
         </Box>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <IconButton sx={{ margin: "15px" }}>
-          <Backspace sx={{ fontSize: "50px" }} />
+        <IconButton sx={{ margin: "15px" }} onClick={() => backspaceGuess()}>
+          <Backspace sx={{ fontSize: "50px", padding: "5px" }} />
         </IconButton>
-        <IconButton sx={{ margin: "15px" }}>
-          <Refresh sx={{ fontSize: "50px" }} />
+        <IconButton sx={{ margin: "15px" }} onClick={shuffleLetters}>
+          <Refresh sx={{ fontSize: "50px", padding: "5px" }} />
         </IconButton>
         <IconButton sx={{ margin: "15px" }} color="primary">
-          <KeyboardReturn sx={{ fontSize: "50px" }} />
+          <KeyboardReturn sx={{ fontSize: "50px", padding: "5px" }} />
         </IconButton>
       </Box>
     </Box>

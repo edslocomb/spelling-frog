@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { Container } from "@mui/material";
 
 const App = () => (
-  <Container>
+  <Container sx={{ height: "100vh" }}>
     <Outlet />
   </Container>
 );
