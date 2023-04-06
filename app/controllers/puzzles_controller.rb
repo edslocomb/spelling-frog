@@ -12,7 +12,8 @@ class PuzzlesController < ApplicationController
         puzzle = Puzzle.find(params[:id])
         render json: {letters: puzzle.letters,
                       requiredLetter: puzzle.required_letter,
-                      words: puzzle.words.map(&:name)}
+                      words: puzzle.words.map(&:name),
+                      score: puzzle.score}
       end
     end
   end

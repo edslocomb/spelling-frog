@@ -4,12 +4,13 @@ import { Box, IconButton, TextField } from "@mui/material";
 import { Backspace, KeyboardReturn, Refresh } from "@mui/icons-material";
 import { useLoaderData } from "react-router-dom";
 import { shuffle } from "radash";
-import LetterButton from "./LetterButton";
+import Tiles from "./Tiles";
+import GuessedWordList from "./GuessedWordList";
 
 interface PuzzleProps {
   letters: string;
   requiredLetter: string;
-  score?: number;
+  score: number;
   words: string[];
 }
 
@@ -28,8 +29,16 @@ export async function loader({ params }: loaderParams) {
   return await getPuzzle(id);
 }
 
+const iconStyles = { fontSize: "50px", padding: "5px" };
+const iconButtonStyles = { margin: "0 20px" };
+const sectionBoxStyles = {
+  display: "flex",
+  justifyContent: "center",
+  margin: "0",
+};
+
 const Puzzle = () => {
-  const { letters, requiredLetter } = useLoaderData() as Awaited<
+  const { letters, requiredLetter, words } = useLoaderData() as Awaited<
     ReturnType<typeof loader>
   >;
 
@@ -45,76 +54,73 @@ const Puzzle = () => {
   const shuffleLetters = () =>
     setNonRequiredLetters(shuffle(nonRequiredLetters));
 
-  const letterButtonColumnSx = {
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
+  const [guessedWords, setGuessedWords] = useState([] as string[]);
+
+  const processGuess = () => {
+    if (!guess.includes(requiredLetter)) {
+      console.log(`"${guess}" does not include required letter`);
+    } else if (guess.length < 4) {
+      console.log(`"${guess}" is less than 4 letters long`);
+    } else if (!guess.split("").every((l) => letters.includes(l))) {
+      console.log(`"${guess}" contains letter not in puzzle`);
+    } else if (guessedWords.includes(guess)) {
+      console.log(`"${guess}" already found`);
+    } else if (!words.includes(guess)) {
+      console.log(`"${guess}" is not in the word list`);
+    } else {
+      setGuessedWords(guessedWords.concat([guess]));
+    }
+    setGuess("");
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        alignContent: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Box sx={{ display: "flex", justifyContent: "center", margin: "20px" }}>
-        <TextField
-          sx={{ fieldSet: { borderColor: "#ddd", borderWidth: "1.5px" } }}
-          value={guess}
+    <Box sx={{ display: "flex", height: "100%", justifyContent: "left" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          alignContent: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box sx={sectionBoxStyles}>
+          <TextField
+            sx={{ fieldSet: { borderColor: "#ddd", borderWidth: "1.5px" } }}
+            value={guess}
+          />
+        </Box>
+        <Tiles
+          addToGuess={addToGuess}
+          nonRequiredLetters={nonRequiredLetters}
+          requiredLetter={requiredLetter}
+          sx={sectionBoxStyles}
         />
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Box sx={letterButtonColumnSx}>
-          <LetterButton
-            letter={nonRequiredLetters[0]}
-            addToGuess={addToGuess}
-          />
-          <LetterButton
-            letter={nonRequiredLetters[1]}
-            addToGuess={addToGuess}
-          />
-        </Box>
-        <Box sx={letterButtonColumnSx}>
-          <LetterButton
-            letter={nonRequiredLetters[2]}
-            addToGuess={addToGuess}
-          />
-          <LetterButton
-            letter={requiredLetter}
-            addToGuess={addToGuess}
-            required
-          />
-          <LetterButton
-            letter={nonRequiredLetters[3]}
-            addToGuess={addToGuess}
-          />
-        </Box>
-        <Box sx={letterButtonColumnSx}>
-          <LetterButton
-            letter={nonRequiredLetters[4]}
-            addToGuess={addToGuess}
-          />
-          <LetterButton
-            letter={nonRequiredLetters[5]}
-            addToGuess={addToGuess}
-          />
+        <Box sx={sectionBoxStyles}>
+          <IconButton sx={iconButtonStyles} onClick={backspaceGuess}>
+            <Backspace sx={iconStyles} />
+          </IconButton>
+          <IconButton sx={iconButtonStyles} onClick={shuffleLetters}>
+            <Refresh sx={iconStyles} />
+          </IconButton>
+          <IconButton
+            sx={iconButtonStyles}
+            onClick={processGuess}
+            color="primary"
+          >
+            <KeyboardReturn sx={iconStyles} />
+          </IconButton>
         </Box>
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <IconButton sx={{ margin: "15px" }} onClick={() => backspaceGuess()}>
-          <Backspace sx={{ fontSize: "50px", padding: "5px" }} />
-        </IconButton>
-        <IconButton sx={{ margin: "15px" }} onClick={shuffleLetters}>
-          <Refresh sx={{ fontSize: "50px", padding: "5px" }} />
-        </IconButton>
-        <IconButton sx={{ margin: "15px" }} color="primary">
-          <KeyboardReturn sx={{ fontSize: "50px", padding: "5px" }} />
-        </IconButton>
-      </Box>
+      <GuessedWordList
+        sx={{
+          flexGrow: 1,
+          border: "1.5px solid #ddd",
+          borderRadius: "5px",
+          paddingLeft: "5px",
+        }}
+        words={guessedWords}
+      />
     </Box>
   );
 };
