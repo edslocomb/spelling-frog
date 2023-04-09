@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useState } from "react";
-import { Box, IconButton, TextField } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, IconButton, TextField, Hidden } from "@mui/material";
 import { Backspace, KeyboardReturn, Refresh } from "@mui/icons-material";
 import { useLoaderData } from "react-router-dom";
 import { shuffle } from "radash";
@@ -25,7 +25,7 @@ interface loaderParams {
 }
 
 export async function loader({ params }: loaderParams) {
-  const id = params.puzzleId || 1;
+  const id = params.puzzleId || 0;
   return await getPuzzle(id);
 }
 
@@ -56,8 +56,33 @@ const Puzzle = () => {
 
   const [guessedWords, setGuessedWords] = useState([] as string[]);
 
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      processGuess();
+    } else if (e.key === "Backspace") {
+      backspaceGuess();
+    } else if (e.key === " ") {
+      shuffleLetters();
+    } else if (e.key.length === 1 && e.key.match(/[a-z]/)) {
+      addToGuess(e.key);
+    } else {
+      console.log(e.key);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  });
+
   const processGuess = () => {
-    if (!guess.includes(requiredLetter)) {
+    if (guess === "") {
+      console.log("empty guess");
+      return;
+    } else if (!guess.includes(requiredLetter)) {
       console.log(`"${guess}" does not include required letter`);
     } else if (guess.length < 4) {
       console.log(`"${guess}" is less than 4 letters long`);
@@ -82,8 +107,12 @@ const Puzzle = () => {
           height: "100%",
           alignContent: "center",
           justifyContent: "center",
+          minWidth: "50%",
         }}
       >
+        <Hidden mdUp>
+          <Box sx={sectionBoxStyles}>{guessedWords.join(" ")}</Box>
+        </Hidden>
         <Box sx={sectionBoxStyles}>
           <TextField
             sx={{ fieldSet: { borderColor: "#ddd", borderWidth: "1.5px" } }}
@@ -107,20 +136,24 @@ const Puzzle = () => {
             sx={iconButtonStyles}
             onClick={processGuess}
             color="primary"
+            id="enter"
           >
             <KeyboardReturn sx={iconStyles} />
           </IconButton>
         </Box>
       </Box>
-      <GuessedWordList
-        sx={{
-          flexGrow: 1,
-          border: "1.5px solid #ddd",
-          borderRadius: "5px",
-          paddingLeft: "5px",
-        }}
-        words={guessedWords}
-      />
+      <Hidden smDown>
+        <GuessedWordList
+          sx={{
+            flexGrow: 1,
+            border: "1.5px solid #ddd",
+            borderRadius: "5px",
+            paddingLeft: "5px",
+            margin: "10px",
+          }}
+          words={guessedWords}
+        />
+      </Hidden>
     </Box>
   );
 };

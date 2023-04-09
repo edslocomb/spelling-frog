@@ -24,6 +24,10 @@ class Word < ApplicationRecord
     # set letters only via name=() or callbacks
   end
 
+  def to_s
+    name
+  end
+
   def score
     return 1 if name.length < 5
     ret = name.length

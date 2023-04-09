@@ -13,7 +13,7 @@ export const LetterButton = ({
   required,
 }: LetterButtonProps) => {
   const variant = required ? "contained" : "outlined";
-  const color = required ? "primary" : "inherit";
+  const color = required ? "secondary" : "inherit";
   const borderStyle = required
     ? {}
     : { borderColor: "#ddd", borderWidth: "1.5px" };
