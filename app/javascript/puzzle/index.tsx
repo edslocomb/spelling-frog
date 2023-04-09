@@ -1,24 +1,24 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Box, IconButton, TextField, Hidden } from "@mui/material";
-import { Backspace, KeyboardReturn, Refresh } from "@mui/icons-material";
+import {
+  BackspaceOutlined,
+  KeyboardReturn,
+  Refresh,
+} from "@mui/icons-material";
 import { useLoaderData } from "react-router-dom";
-import { shuffle } from "radash";
+import { shuffle, unique } from "radash";
 import Tiles from "./Tiles";
 import GuessedWordList from "./GuessedWordList";
+import ScoreBar from "./ScoreBar";
 
-interface PuzzleProps {
-  letters: string;
-  requiredLetter: string;
-  score: number;
-  words: string[];
-}
-
-export async function getPuzzle(id: number): Promise<PuzzleProps> {
-  const response = await fetch(`/puzzles/${id}.json`);
-  const json = await response.json();
-  return json;
-}
+const iconStyles = { fontSize: "50px", padding: "5px" };
+const iconButtonStyles = { margin: "0 20px" };
+const sectionBoxStyles = {
+  display: "flex",
+  justifyContent: "center",
+  margin: "0",
+};
 
 interface loaderParams {
   params: { puzzleId?: number };
@@ -29,18 +29,22 @@ export async function loader({ params }: loaderParams) {
   return await getPuzzle(id);
 }
 
-const iconStyles = { fontSize: "50px", padding: "5px" };
-const iconButtonStyles = { margin: "0 20px" };
-const sectionBoxStyles = {
-  display: "flex",
-  justifyContent: "center",
-  margin: "0",
-};
+export async function getPuzzle(id: number): Promise<PuzzleProps> {
+  const response = await fetch(`/puzzles/${id}.json`);
+  const json = await response.json();
+  return json;
+}
+
+interface PuzzleProps {
+  letters: string;
+  requiredLetter: string;
+  maxScore: number;
+  words: string[];
+}
 
 const Puzzle = () => {
-  const { letters, requiredLetter, words } = useLoaderData() as Awaited<
-    ReturnType<typeof loader>
-  >;
+  const { letters, requiredLetter, words, maxScore } =
+    useLoaderData() as Awaited<ReturnType<typeof loader>>;
 
   const [guess, setGuess] = useState("");
 
@@ -69,6 +73,19 @@ const Puzzle = () => {
       console.log(e.key);
     }
   };
+
+  const wordScore = (word: string) => {
+    if (word.length < 5) {
+      return 1;
+    }
+    if (unique(word.split("").sort()).join("") === letters) {
+      return word.length + 7;
+    }
+    return word.length;
+  };
+
+  const score = () =>
+    guessedWords.map(wordScore).reduce((memo, s) => memo + s, 0);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -111,6 +128,11 @@ const Puzzle = () => {
         }}
       >
         <Hidden mdUp>
+          <ScoreBar
+            sx={{ ...sectionBoxStyles }}
+            score={score()}
+            maxScore={maxScore}
+          />
           <Box sx={sectionBoxStyles}>{guessedWords.join(" ")}</Box>
         </Hidden>
         <Box sx={sectionBoxStyles}>
@@ -127,7 +149,7 @@ const Puzzle = () => {
         />
         <Box sx={sectionBoxStyles}>
           <IconButton sx={iconButtonStyles} onClick={backspaceGuess}>
-            <Backspace sx={iconStyles} />
+            <BackspaceOutlined sx={iconStyles} />
           </IconButton>
           <IconButton sx={iconButtonStyles} onClick={shuffleLetters}>
             <Refresh sx={iconStyles} />
@@ -143,16 +165,21 @@ const Puzzle = () => {
         </Box>
       </Box>
       <Hidden smDown>
-        <GuessedWordList
-          sx={{
-            flexGrow: 1,
-            border: "1.5px solid #ddd",
-            borderRadius: "5px",
-            paddingLeft: "5px",
-            margin: "10px",
-          }}
-          words={guessedWords}
-        />
+        <Box sx={{ flexGrow: 1, marginLeft: "10px" }}>
+          <ScoreBar
+            sx={{ ...sectionBoxStyles, marginBottom: "5px" }}
+            maxScore={maxScore}
+            score={score()}
+          />
+          <GuessedWordList
+            sx={{
+              border: "1.5px solid #ddd",
+              borderRadius: "5px",
+              padding: "5px",
+            }}
+            words={guessedWords}
+          />
+        </Box>
       </Hidden>
     </Box>
   );

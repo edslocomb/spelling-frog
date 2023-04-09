@@ -23,7 +23,7 @@ class PuzzlesController < ApplicationController
         render json: {letters: puzzle.letters,
                       requiredLetter: puzzle.required_letter,
                       words: puzzle.words.map(&:name),
-                      score: puzzle.score}
+                      maxScore: puzzle.score}
       end
     end
   end
