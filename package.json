@@ -45,6 +45,7 @@
     "app/assets/*"
   ],
   "scripts": {
-    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=assets --loader:.woff=dataurl --loader:.woff2=dataurl"
+    "build": "esbuild app/javascript/*.* --bundle --outdir=app/assets/builds --public-path=assets --loader:.woff=dataurl --loader:.woff2=dataurl --minify",
+    "build-dev": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=assets --loader:.woff=dataurl --loader:.woff2=dataurl"
   }
 }

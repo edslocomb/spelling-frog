@@ -28,5 +28,7 @@ class PuzzlesTest < ApplicationSystemTestCase
       send_keys :return
       assert_text word.to_s.capitalize
     end
+
+    assert_text puzzle.score
   end
 end

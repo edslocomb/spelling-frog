@@ -116,25 +116,24 @@ const Puzzle = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100%", justifyContent: "left" }}>
+    <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "left" }}>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          height: "100%",
           alignContent: "center",
           justifyContent: "center",
-          minWidth: "50%",
+          minWidth: { xs: "100%", sm: "50%" },
         }}
       >
-        <Hidden mdUp>
-          <ScoreBar
-            sx={{ ...sectionBoxStyles }}
-            score={score()}
-            maxScore={maxScore}
-          />
-          <Box sx={sectionBoxStyles}>{guessedWords.join(" ")}</Box>
-        </Hidden>
+        <ScoreBar
+          sx={{ ...sectionBoxStyles, display: { xs: "flex", sm: "none" } }}
+          score={score()}
+          maxScore={maxScore}
+        />
+        <Box sx={{ ...sectionBoxStyles, display: { xs: "flex", sm: "none" } }}>
+          {guessedWords.join(" ")}
+        </Box>
         <Box sx={sectionBoxStyles}>
           <TextField
             sx={{ fieldSet: { borderColor: "#ddd", borderWidth: "1.5px" } }}
@@ -164,23 +163,29 @@ const Puzzle = () => {
           </IconButton>
         </Box>
       </Box>
-      <Hidden smDown>
-        <Box sx={{ flexGrow: 1, marginLeft: "10px" }}>
-          <ScoreBar
-            sx={{ ...sectionBoxStyles, marginBottom: "5px" }}
-            maxScore={maxScore}
-            score={score()}
-          />
-          <GuessedWordList
-            sx={{
-              border: "1.5px solid #ddd",
-              borderRadius: "5px",
-              padding: "5px",
-            }}
-            words={guessedWords}
-          />
-        </Box>
-      </Hidden>
+      <Box
+        sx={{
+          flexGrow: 1,
+          marginLeft: "10px",
+          display: { xs: "none", sm: "flex" },
+          flexDirection: "column",
+        }}
+      >
+        <ScoreBar
+          sx={{ ...sectionBoxStyles, marginBottom: "5px" }}
+          maxScore={maxScore}
+          score={score()}
+        />
+        <GuessedWordList
+          sx={{
+            border: "1.5px solid #ddd",
+            borderRadius: "5px",
+            flexGrow: 1,
+            padding: "5px",
+          }}
+          words={guessedWords}
+        />
+      </Box>
     </Box>
   );
 };
