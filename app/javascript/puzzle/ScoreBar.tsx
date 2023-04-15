@@ -11,7 +11,7 @@ export const ScoreBar = ({ sx, score, maxScore }: ScoreBarProps) => {
   const winningScore = Math.round(maxScore * 0.7);
   const displayedMax = score >= winningScore ? maxScore : winningScore;
   return (
-    <Box sx={{ ...sx, displzy: "flex", alignItems: "center" }}>
+    <Box sx={{ ...sx, display: "flex", alignItems: "center" }}>
       <Box sx={{ flexGrow: 1, marginRight: "5px" }}>
         <LinearProgress
           variant="determinate"
@@ -29,7 +29,7 @@ export const ScoreBar = ({ sx, score, maxScore }: ScoreBarProps) => {
           borderRadius: "5px",
         }}
       >
-        <Typography variant="button" sx={{ lineHeight: "30px" }}>
+        <Typography variant="button" color="black" sx={{ lineHeight: "30px" }}>
           {score}
         </Typography>
       </Box>

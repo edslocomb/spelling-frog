@@ -22,7 +22,10 @@ export const GuessedWordList = ({ sx, words }: GuessedWordListProps) => {
     <Box sx={sx}>
       <List subheader={subheader} sx={{ maxWidth: "190px" }}>
         {words.sort().map((word) => (
-          <ListItem key={word} sx={{ borderBottom: "1px solid #ddd" }}>
+          <ListItem
+            key={word}
+            sx={{ borderBottom: "1px solid", borderBottomColor: "divider" }}
+          >
             <Typography sx={{ textTransform: "capitalize" }}>{word}</Typography>
           </ListItem>
         ))}

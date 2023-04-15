@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Box, IconButton, TextField, Hidden } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import {
   BackspaceOutlined,
   KeyboardReturn,
@@ -11,13 +11,13 @@ import { shuffle, unique } from "radash";
 import Tiles from "./Tiles";
 import GuessedWordList from "./GuessedWordList";
 import ScoreBar from "./ScoreBar";
+import Guess from "./Guess";
 
 const iconStyles = { fontSize: "50px", padding: "5px" };
 const iconButtonStyles = { margin: "0 20px" };
 const sectionBoxStyles = {
   display: "flex",
   justifyContent: "center",
-  margin: "0",
 };
 
 interface loaderParams {
@@ -126,41 +126,57 @@ const Puzzle = () => {
           minWidth: { xs: "100%", sm: "50%" },
         }}
       >
-        <ScoreBar
-          sx={{ ...sectionBoxStyles, display: { xs: "flex", sm: "none" } }}
-          score={score()}
-          maxScore={maxScore}
-        />
-        <Box sx={{ ...sectionBoxStyles, display: { xs: "flex", sm: "none" } }}>
-          {guessedWords.join(" ")}
+        <Box
+          sx={{
+            justifyContent: "center",
+            flexDirection: "column",
+            display: { xs: "flex", sm: "none" },
+          }}
+        >
+          <ScoreBar score={score()} maxScore={maxScore} />
+          <Box>{guessedWords.join(" ")}</Box>
         </Box>
-        <Box sx={sectionBoxStyles}>
-          <TextField
-            sx={{ fieldSet: { borderColor: "#ddd", borderWidth: "1.5px" } }}
-            value={guess}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            justifyContent: "center",
+          }}
+        >
+          <Guess
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              marginBottom: "10px",
+            }}
+            guess={guess}
+            letters={letters}
+            requiredLetter={requiredLetter}
           />
-        </Box>
-        <Tiles
-          addToGuess={addToGuess}
-          nonRequiredLetters={nonRequiredLetters}
-          requiredLetter={requiredLetter}
-          sx={sectionBoxStyles}
-        />
-        <Box sx={sectionBoxStyles}>
-          <IconButton sx={iconButtonStyles} onClick={backspaceGuess}>
-            <BackspaceOutlined sx={iconStyles} />
-          </IconButton>
-          <IconButton sx={iconButtonStyles} onClick={shuffleLetters}>
-            <Refresh sx={iconStyles} />
-          </IconButton>
-          <IconButton
-            sx={iconButtonStyles}
-            onClick={processGuess}
-            color="primary"
-            id="enter"
-          >
-            <KeyboardReturn sx={iconStyles} />
-          </IconButton>
+          <Tiles
+            addToGuess={addToGuess}
+            nonRequiredLetters={nonRequiredLetters}
+            requiredLetter={requiredLetter}
+            sx={sectionBoxStyles}
+          />
+          <Box sx={sectionBoxStyles}>
+            <IconButton sx={iconButtonStyles} onClick={backspaceGuess}>
+              <BackspaceOutlined sx={iconStyles} />
+            </IconButton>
+            <IconButton sx={iconButtonStyles} onClick={shuffleLetters}>
+              <Refresh sx={iconStyles} />
+            </IconButton>
+            <IconButton
+              sx={iconButtonStyles}
+              onClick={processGuess}
+              color="primary"
+              id="enter"
+            >
+              <KeyboardReturn sx={iconStyles} />
+            </IconButton>
+          </Box>
         </Box>
       </Box>
       <Box
@@ -178,7 +194,9 @@ const Puzzle = () => {
         />
         <GuessedWordList
           sx={{
-            border: "1.5px solid #ddd",
+            borderWidth: "1.5px",
+            borderStyle: "solid",
+            borderColor: "divider",
             borderRadius: "5px",
             flexGrow: 1,
             padding: "5px",
