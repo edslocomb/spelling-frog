@@ -25,7 +25,7 @@ const themeCustomizations = {
     mode: undefined,
   },
   typography: {
-    fontSize: 12,
+    fontSize: 14,
     h1: { fontSize: "2.2rem" },
     h2: { fontSize: "1.8rem" },
     h3: { fontSize: "1.6rem" },
@@ -37,15 +37,11 @@ const themeCustomizations = {
 
 const Root = () => {
   const mode = useMediaQuery("(prefers-color-scheme: dark)") ? "dark" : "light";
-  console.log(mode);
   const modedTheme = assign(themeCustomizations, { palette: { mode: mode } });
-  console.log(modedTheme);
-  console.log(themeCustomizations);
   const theme = useMemo(
     () => responsiveFontSizes(createTheme(modedTheme), { factor: 3 }),
     [mode]
   );
-  console.log(theme);
   return (
     <React.StrictMode>
       <ThemeProvider theme={theme}>

@@ -7,7 +7,7 @@ import {
   Refresh,
 } from "@mui/icons-material";
 import { useLoaderData } from "react-router-dom";
-import { shuffle, unique } from "radash";
+import { shuffle, unique, omit } from "radash";
 import Tiles from "./Tiles";
 import GuessedWordList from "./GuessedWordList";
 import ScoreBar from "./ScoreBar";
@@ -42,6 +42,8 @@ interface PuzzleProps {
   words: string[];
 }
 
+const modifierKeyNames = ["Alt", "Control", "OS"];
+
 const Puzzle = () => {
   const { letters, requiredLetter, words, maxScore } =
     useLoaderData() as Awaited<ReturnType<typeof loader>>;
@@ -63,14 +65,38 @@ const Puzzle = () => {
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       processGuess();
-    } else if (e.key === "Backspace") {
-      backspaceGuess();
-    } else if (e.key === " ") {
-      shuffleLetters();
-    } else if (e.key.length === 1 && e.key.match(/[a-z]/)) {
-      addToGuess(e.key);
-    } else {
-      console.log(e.key);
+    } else if (keyModifiers["Control"] && keyModifiers["Alt"]) {
+      // Debugging/Cheat codes, Ctrl+Alt+[arrow key]
+      if (e.key === "ArrowUp") {
+        setGuessedWords(shuffle(words.slice()));
+      } else if (e.key === "ArrowDown") {
+        setGuessedWords(words.slice().sort());
+      } else if (e.key === "ArrowRight" && guessedWords.length < words.length) {
+        const missingWords = words.filter((w) => !guessedWords.includes(w));
+        setGuessedWords([...guessedWords, missingWords[0]]);
+      } else if (e.key === "ArrowLeft") {
+        setGuessedWords(guessedWords.slice(0, -1));
+      }
+    } else if (modifierKeyNames.includes(e.key) && !keyModifiers[e.key]) {
+      setKeyModifiers({ ...keyModifiers, [e.key]: true });
+    } else if (Object.keys(keyModifiers).length === 0) {
+      if (e.key === "Backspace") {
+        backspaceGuess();
+      } else if (e.key === " ") {
+        shuffleLetters();
+      } else if (e.key.length === 1 && e.key.match(/[a-zA-Z]/)) {
+        addToGuess(e.key.toLowerCase());
+      }
+    }
+  };
+
+  const [keyModifiers, setKeyModifiers] = useState(
+    {} as { [key: string]: boolean }
+  );
+
+  const handleKeyUp = (e: KeyboardEvent) => {
+    if (keyModifiers[e.key]) {
+      setKeyModifiers(omit(keyModifiers, [e.key]));
     }
   };
 
@@ -89,9 +115,11 @@ const Puzzle = () => {
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
     };
   });
 
@@ -100,7 +128,9 @@ const Puzzle = () => {
       console.log("empty guess");
       return;
     } else if (!guess.includes(requiredLetter)) {
-      console.log(`"${guess}" does not include required letter`);
+      console.log(
+        `"${guess}" does not include "${requiredLetter.toUpperCase()}"`
+      );
     } else if (guess.length < 4) {
       console.log(`"${guess}" is less than 4 letters long`);
     } else if (!guess.split("").every((l) => letters.includes(l))) {
@@ -182,13 +212,18 @@ const Puzzle = () => {
       <Box
         sx={{
           flexGrow: 1,
-          marginLeft: "10px",
           display: { xs: "none", sm: "flex" },
           flexDirection: "column",
+          minHeight: "100%",
         }}
       >
         <ScoreBar
-          sx={{ ...sectionBoxStyles, marginBottom: "5px" }}
+          sx={{
+            ...sectionBoxStyles,
+            marginBottom: "2%",
+            minHeight: "10%",
+            maxHeight: "10%",
+          }}
           maxScore={maxScore}
           score={score()}
         />
@@ -198,8 +233,9 @@ const Puzzle = () => {
             borderStyle: "solid",
             borderColor: "divider",
             borderRadius: "5px",
-            flexGrow: 1,
-            padding: "5px",
+            minHeight: "86%",
+            padding: "5px 20px",
+            marginBottom: "2%",
           }}
           words={guessedWords}
         />

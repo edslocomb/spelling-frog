@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  Box,
   List,
   ListItem,
   ListSubheader,
@@ -16,21 +15,42 @@ interface GuessedWordListProps {
 
 export const GuessedWordList = ({ sx, words }: GuessedWordListProps) => {
   const subheader = (
-    <ListSubheader>You have found {words.length} words</ListSubheader>
+    <ListSubheader sx={{ paddingLeft: 0, columnSpan: "all" }}>
+      You have found {words.length} words
+    </ListSubheader>
   );
+
   return (
-    <Box sx={sx}>
-      <List subheader={subheader} sx={{ maxWidth: "190px" }}>
-        {words.sort().map((word) => (
+    <List
+      subheader={subheader}
+      sx={{
+        ...sx,
+        columnCount: { xs: 2, sm: 2, md: 3 },
+        columnWidth: "auto",
+        columnFill: "auto",
+        overflow: "scroll",
+      }}
+    >
+      {words
+        .slice() // clone, don't sort the array passed in
+        .sort()
+        .map((word) => (
           <ListItem
             key={word}
-            sx={{ borderBottom: "1px solid", borderBottomColor: "divider" }}
+            sx={{
+              borderBottom: "1px solid",
+              borderBottomColor: "divider",
+              display: "inline-block",
+              padding: "0",
+              marginTop: "6px",
+            }}
           >
-            <Typography sx={{ textTransform: "capitalize" }}>{word}</Typography>
+            <Typography component="span" sx={{ textTransform: "capitalize" }}>
+              {word}
+            </Typography>
           </ListItem>
         ))}
-      </List>
-    </Box>
+    </List>
   );
 };
 
