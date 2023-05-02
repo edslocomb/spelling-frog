@@ -1,11 +1,13 @@
 import * as React from "react";
 import { Outlet } from "react-router-dom";
 import { Container, Box, Typography } from "@mui/material";
+import FrogDoodleIcon from "./FrogDoodleIcon";
 
 const App = () => (
   <Container
     sx={{
-      height: "100vh",
+      minHeight: "100vh",
+      maxHeight: { xs: "auto", sm: "100vh" },
       flexDirection: "column",
       display: "flex",
     }}
@@ -13,16 +15,24 @@ const App = () => (
     <Box
       sx={{
         display: "flex",
-        minHeight: "20vh",
-        maxHeight: "20vh",
-        alignContent: "center",
-        justifyContent: "center",
-        borderBottomColor: { sm: "secondary.light" },
-        borderBottomWidth: { sm: "1px" },
-        borderBottomStyle: { sm: "solid" },
+        maxHeight: { xs: "10vh", sm: "20vh" },
+        minHeight: { xs: "10vh", sm: "20vh" },
+        justifyContent: { xs: "left", sm: "center" },
       }}
     >
-      <Typography variant="h1" sx={{ display: "flex", alignItems: "center" }}>
+      <Typography
+        variant="h1"
+        color="primary.dark"
+        sx={{ display: "flex", alignItems: "center", fontWeight: 400 }}
+      >
+        <FrogDoodleIcon
+          sx={{
+            marginTop: "auto",
+            marginBottom: "auto",
+            marginRight: ".2em",
+            fontSize: "2.5em",
+          }}
+        />
         Spelling Frog
       </Typography>
     </Box>
@@ -30,7 +40,6 @@ const App = () => (
       sx={{
         minHeight: "80vh",
         display: "flex",
-        width: "100%",
       }}
     >
       <Outlet />
