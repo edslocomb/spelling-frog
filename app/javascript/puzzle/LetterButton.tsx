@@ -14,7 +14,9 @@ export const LetterButton = ({
 }: LetterButtonProps) => {
   const variant = required ? "contained" : "outlined";
   const color = required ? "secondary" : "inherit";
+  // const borderWidth = required ? {} : { borderWidth: "2px" };
   const borderWidth = required ? {} : { borderWidth: "2px" };
+
   return (
     <Button
       disableElevation
@@ -23,8 +25,8 @@ export const LetterButton = ({
       onClick={() => addToGuess(letter)}
       sx={{
         ...borderWidth,
-        borderRadius: "50%",
         borderColor: "divider",
+        borderRadius: "50%",
         fontSize: "25px",
         fontWeight: 700,
         marginTop: "5px",

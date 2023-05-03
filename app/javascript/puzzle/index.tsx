@@ -10,15 +10,35 @@ import { useLoaderData } from "react-router-dom";
 import { shuffle, unique, omit } from "radash";
 import Tiles from "./Tiles";
 import GuessedWordList from "./GuessedWordList";
+import GuessedWordDropdown from "./GuessedWordDropdown";
 import ScoreBar from "./ScoreBar";
 import Guess from "./Guess";
 
 const iconStyles = { fontSize: "50px", padding: "5px" };
 const iconButtonStyles = { margin: "0 20px" };
-const sectionBoxStyles = {
-  display: "flex",
-  justifyContent: "center",
+
+const wordScore = (word: string, letters: string) => {
+  if (word.length < 5) {
+    return 1;
+  }
+  if (unique(word.split("").sort()).join("") === letters) {
+    return word.length + 7;
+  }
+  return word.length;
 };
+
+interface PuzzleProps {
+  letters: string;
+  requiredLetter: string;
+  maxScore: number;
+  words: string[];
+}
+
+export async function getPuzzle(id: number): Promise<PuzzleProps> {
+  const response = await fetch(`/puzzles/${id}.json`);
+  const json = await response.json();
+  return json;
+}
 
 interface loaderParams {
   params: { puzzleId?: number };
@@ -29,56 +49,71 @@ export async function loader({ params }: loaderParams) {
   return await getPuzzle(id);
 }
 
-export async function getPuzzle(id: number): Promise<PuzzleProps> {
-  const response = await fetch(`/puzzles/${id}.json`);
-  const json = await response.json();
-  return json;
-}
-
-interface PuzzleProps {
-  letters: string;
-  requiredLetter: string;
-  maxScore: number;
-  words: string[];
-}
-
 const modifierKeyNames = ["Alt", "Control", "OS"];
+type KeyModifier = (typeof modifierKeyNames)[number];
+
+export interface PuzzleStateType {
+  guess: string;
+  shuffledLetters: string[];
+  guessedWords: string[];
+  keyModifiers: { [key in KeyModifier]: boolean };
+}
 
 const Puzzle = () => {
-  const { letters, requiredLetter, words, maxScore } =
-    useLoaderData() as Awaited<ReturnType<typeof loader>>;
+  const puzzleProps = useLoaderData() as Awaited<ReturnType<typeof loader>>;
+  const { letters, requiredLetter, words, maxScore } = puzzleProps;
 
-  const [guess, setGuess] = useState("");
+  const [puzzleState, setPuzzleState] = useState({
+    guess: "",
+    shuffledLetters: [
+      requiredLetter,
+      ...letters.split("").filter((l) => l !== requiredLetter),
+    ],
+    guessedWords: [] as string[],
+    keyModifiers: {} as { [key in KeyModifier]: boolean },
+  } as PuzzleStateType);
 
-  const addToGuess = (letter: string) => setGuess(`${guess}${letter}`);
-  const backspaceGuess = () => setGuess(guess.slice(0, -1));
+  const setStateOf = <K extends keyof PuzzleStateType>(
+    key: K,
+    value: PuzzleStateType[K]
+  ) => setPuzzleState({ ...puzzleState, [key]: value });
 
-  const [nonRequiredLetters, setNonRequiredLetters] = useState(
-    letters.split("").filter((l) => l !== requiredLetter)
-  );
+  const addToGuess = (letter: string) =>
+    setStateOf("guess", `${puzzleState.guess}${letter}`);
+
+  const backspaceGuess = () =>
+    setStateOf("guess", puzzleState.guess.slice(0, -1));
 
   const shuffleLetters = () =>
-    setNonRequiredLetters(shuffle(nonRequiredLetters));
+    setStateOf("shuffledLetters", [
+      puzzleState.shuffledLetters[0],
+      ...shuffle(puzzleState.shuffledLetters.slice(1)),
+    ]);
 
-  const [guessedWords, setGuessedWords] = useState([] as string[]);
+  const score = () =>
+    puzzleState.guessedWords
+      .map((w) => wordScore(w, letters))
+      .reduce((memo, s) => memo + s, 0);
 
   const handleKeyDown = (e: KeyboardEvent) => {
+    const { keyModifiers, guessedWords } = puzzleState;
+
     if (e.key === "Enter") {
       processGuess();
     } else if (keyModifiers["Control"] && keyModifiers["Alt"]) {
       // Debugging/Cheat codes, Ctrl+Alt+[arrow key]
       if (e.key === "ArrowUp") {
-        setGuessedWords(shuffle(words.slice()));
+        setStateOf("guessedWords", []);
       } else if (e.key === "ArrowDown") {
-        setGuessedWords(words.slice().sort());
+        setStateOf("guessedWords", shuffle(words.slice()));
       } else if (e.key === "ArrowRight" && guessedWords.length < words.length) {
         const missingWords = words.filter((w) => !guessedWords.includes(w));
-        setGuessedWords([...guessedWords, missingWords[0]]);
+        setStateOf("guessedWords", [...guessedWords, shuffle(missingWords)[0]]);
       } else if (e.key === "ArrowLeft") {
-        setGuessedWords(guessedWords.slice(0, -1));
+        setStateOf("guessedWords", guessedWords.slice(0, -1));
       }
     } else if (modifierKeyNames.includes(e.key) && !keyModifiers[e.key]) {
-      setKeyModifiers({ ...keyModifiers, [e.key]: true });
+      setStateOf("keyModifiers", { ...keyModifiers, [e.key]: true });
     } else if (Object.keys(keyModifiers).length === 0) {
       if (e.key === "Backspace") {
         backspaceGuess();
@@ -90,28 +125,11 @@ const Puzzle = () => {
     }
   };
 
-  const [keyModifiers, setKeyModifiers] = useState(
-    {} as { [key: string]: boolean }
-  );
-
   const handleKeyUp = (e: KeyboardEvent) => {
-    if (keyModifiers[e.key]) {
-      setKeyModifiers(omit(keyModifiers, [e.key]));
+    if (puzzleState.keyModifiers[e.key]) {
+      setStateOf("keyModifiers", omit(puzzleState.keyModifiers, [e.key]));
     }
   };
-
-  const wordScore = (word: string) => {
-    if (word.length < 5) {
-      return 1;
-    }
-    if (unique(word.split("").sort()).join("") === letters) {
-      return word.length + 7;
-    }
-    return word.length;
-  };
-
-  const score = () =>
-    guessedWords.map(wordScore).reduce((memo, s) => memo + s, 0);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -124,8 +142,9 @@ const Puzzle = () => {
   });
 
   const processGuess = () => {
+    const { guess, guessedWords } = puzzleState;
+
     if (guess === "") {
-      console.log("empty guess");
       return;
     } else if (!guess.includes(requiredLetter)) {
       console.log(
@@ -140,9 +159,14 @@ const Puzzle = () => {
     } else if (!words.includes(guess)) {
       console.log(`"${guess}" is not in the word list`);
     } else {
-      setGuessedWords(guessedWords.concat([guess]));
+      setPuzzleState({
+        ...puzzleState,
+        guessedWords: [...guessedWords, guess],
+        guess: "",
+      });
+      return;
     }
-    setGuess("");
+    setStateOf("guess", "");
   };
 
   return (
@@ -158,20 +182,32 @@ const Puzzle = () => {
       >
         <Box
           sx={{
-            justifyContent: "center",
             flexDirection: "column",
             display: { xs: "flex", sm: "none" },
           }}
         >
-          <ScoreBar score={score()} maxScore={maxScore} />
-          <Box>{guessedWords.join(" ")}</Box>
+          <ScoreBar
+            score={score()}
+            maxScore={maxScore}
+            sx={{
+              width: "100%",
+              height: "5vh",
+              paddingBottom: "5px",
+            }}
+          />
+          <GuessedWordDropdown
+            words={puzzleState.guessedWords}
+            letters={letters}
+            sx={{ width: "calc(100vw - 32px)", maxHeight: "80vh" }}
+            guessedWordListSx={{ height: "72vh" }}
+          />
         </Box>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             flexGrow: 1,
-            justifyContent: "center",
+            justifyContent: "flex-start",
           }}
         >
           <Guess
@@ -181,17 +217,15 @@ const Puzzle = () => {
               justifyContent: "center",
               marginBottom: "10px",
             }}
-            guess={guess}
+            guess={puzzleState.guess}
             letters={letters}
             requiredLetter={requiredLetter}
           />
           <Tiles
             addToGuess={addToGuess}
-            nonRequiredLetters={nonRequiredLetters}
-            requiredLetter={requiredLetter}
-            sx={sectionBoxStyles}
+            letters={puzzleState.shuffledLetters}
           />
-          <Box sx={sectionBoxStyles}>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
             <IconButton sx={iconButtonStyles} onClick={backspaceGuess}>
               <BackspaceOutlined sx={iconStyles} />
             </IconButton>
@@ -219,25 +253,23 @@ const Puzzle = () => {
       >
         <ScoreBar
           sx={{
-            ...sectionBoxStyles,
-            marginBottom: "2%",
-            minHeight: "10%",
-            maxHeight: "10%",
+            height: "8%",
           }}
           maxScore={maxScore}
           score={score()}
         />
         <GuessedWordList
+          letters={letters}
+          words={puzzleState.guessedWords}
           sx={{
-            borderWidth: "1.5px",
-            borderStyle: "solid",
+            border: "1.5px solid",
             borderColor: "divider",
             borderRadius: "5px",
-            minHeight: "86%",
+            minHeight: "87%",
+            maxHeight: "87%",
             padding: "5px 20px",
             marginBottom: "2%",
           }}
-          words={guessedWords}
         />
       </Box>
     </Box>

@@ -7,28 +7,39 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
+import { WordsFoundText } from "./WordsFoundText";
+
+export const usesAllLetters = (word: string, letters: string) =>
+  letters.split("").every((char) => word.includes(char));
 
 interface GuessedWordListProps {
+  noHeader?: boolean;
   words: string[];
+  letters: string;
   sx?: SxProps<Theme>;
 }
 
-export const GuessedWordList = ({ sx, words }: GuessedWordListProps) => {
+export const GuessedWordList = ({
+  words,
+  letters,
+  noHeader,
+  sx,
+}: GuessedWordListProps) => {
   const subheader = (
     <ListSubheader sx={{ paddingLeft: 0, columnSpan: "all" }}>
-      You have found {words.length} words
+      <WordsFoundText numWords={words.length} />
     </ListSubheader>
   );
 
   return (
     <List
-      subheader={subheader}
+      subheader={noHeader ? undefined : subheader}
       sx={{
-        ...sx,
         columnCount: { xs: 2, sm: 2, md: 3 },
         columnWidth: "auto",
         columnFill: "auto",
         overflow: "scroll",
+        ...sx,
       }}
     >
       {words
@@ -45,7 +56,13 @@ export const GuessedWordList = ({ sx, words }: GuessedWordListProps) => {
               marginTop: "6px",
             }}
           >
-            <Typography component="span" sx={{ textTransform: "capitalize" }}>
+            <Typography
+              component="span"
+              sx={{
+                textTransform: "capitalize",
+                fontWeight: usesAllLetters(word, letters) ? 700 : "inherit",
+              }}
+            >
               {word}
             </Typography>
           </ListItem>

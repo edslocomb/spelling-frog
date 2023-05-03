@@ -27,6 +27,14 @@ class PuzzlesTest < ApplicationSystemTestCase
       assert_text word.to_s.capitalize
     end
 
+    # word using all letters is in bold
+    assert_selector("span", text: "Madrigal")
+    node = first(:element, "span", text: "milligram", visible: :all)
+    puts node.style("font-weight")
+    assert_selector("span", text: "Madrigal", style: {"font-weight": "700"})
+    # word using only some letters is normal weight
+    assert_selector("span", text: "Milligram", style: {"font-weight": "400"})
+
     assert_text puzzle.score
   end
 
@@ -43,10 +51,10 @@ class PuzzlesTest < ApplicationSystemTestCase
     assert_no_text "Gaddy"
 
     send_keys "gilly"
-    assert_text "gilly"
+    assert_text "GILLY"
     # 'Y' should render in grey
-    assert_selector("span", text: "Y", style: {color: "#ddd"})
+    assert_selector("span", text: "Y", style: {color: "rgba(0, 0, 0, 0.38)"})
     send_keys :return
-    assert_no_text "Gaddy"
+    assert_no_text "Gilly"
   end
 end

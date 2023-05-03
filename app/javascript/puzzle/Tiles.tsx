@@ -9,36 +9,26 @@ const letterButtonColumnSx = {
 };
 
 interface TilesProps {
-  requiredLetter: string;
-  nonRequiredLetters: string[];
+  letters: string[];
   addToGuess: (letter: string) => void;
   sx?: SxProps<Theme>;
 }
 
-export const Tiles = ({
-  requiredLetter,
-  nonRequiredLetters,
-  addToGuess,
-  sx,
-}: TilesProps) => {
+export const Tiles = ({ letters, addToGuess, sx }: TilesProps) => {
   return (
-    <Box sx={sx}>
+    <Box sx={{ display: "flex", justifyContent: "center", ...sx }}>
       <Box sx={letterButtonColumnSx}>
-        <LetterButton letter={nonRequiredLetters[0]} addToGuess={addToGuess} />
-        <LetterButton letter={nonRequiredLetters[1]} addToGuess={addToGuess} />
+        <LetterButton letter={letters[1]} addToGuess={addToGuess} />
+        <LetterButton letter={letters[2]} addToGuess={addToGuess} />
       </Box>
       <Box sx={letterButtonColumnSx}>
-        <LetterButton letter={nonRequiredLetters[2]} addToGuess={addToGuess} />
-        <LetterButton
-          letter={requiredLetter}
-          addToGuess={addToGuess}
-          required
-        />
-        <LetterButton letter={nonRequiredLetters[3]} addToGuess={addToGuess} />
+        <LetterButton letter={letters[3]} addToGuess={addToGuess} />
+        <LetterButton letter={letters[0]} addToGuess={addToGuess} required />
+        <LetterButton letter={letters[4]} addToGuess={addToGuess} />
       </Box>
       <Box sx={letterButtonColumnSx}>
-        <LetterButton letter={nonRequiredLetters[4]} addToGuess={addToGuess} />
-        <LetterButton letter={nonRequiredLetters[5]} addToGuess={addToGuess} />
+        <LetterButton letter={letters[5]} addToGuess={addToGuess} />
+        <LetterButton letter={letters[6]} addToGuess={addToGuess} />
       </Box>
     </Box>
   );
