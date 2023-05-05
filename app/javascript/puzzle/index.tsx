@@ -75,10 +75,12 @@ const Puzzle = () => {
     keyModifiers: {} as { [key in KeyModifier]: boolean },
   } as PuzzleStateType);
 
-  const setStateOf = <K extends keyof PuzzleStateType>(
+  function setStateOf<K extends keyof PuzzleStateType>(
     key: K,
     value: PuzzleStateType[K]
-  ) => setPuzzleState({ ...puzzleState, [key]: value });
+  ) {
+    setPuzzleState({ ...puzzleState, [key]: value });
+  }
 
   const addToGuess = (letter: string) =>
     setStateOf("guess", `${puzzleState.guess}${letter}`);

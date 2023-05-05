@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, SxProps, Theme, Typography } from "@mui/material";
+import { SxProps, Theme, Typography, keyframes } from "@mui/material";
 
 interface ScoreNotificationType {
   word: string;
@@ -7,25 +7,26 @@ interface ScoreNotificationType {
   sx?: SxProps<Theme>;
 }
 
-export const ScoreNotification = ({
-  word,
-  score,
-  sx,
-}: ScoreNotificationType) => (
-  <Box sx={sx}>
-    <Typography
-      component="span"
-      sx={{
-        padding: "5px",
-        textTransform: "capitalize",
-      }}
-    >
-      {word}!
+const rise = keyframes`
+  0% { transform: translateY(0) }
+  75% { transform: translateY(-100%); opacity: 1 }
+  100% { transform: translateY(-100%); opacity: 0 }
+`;
+
+const ScoreNotification = ({ word, score, sx }: ScoreNotificationType) => (
+  <Typography
+    component="div"
+    sx={{
+      ...sx,
+      textTransform: "capitalize",
+      animation: `${rise} 1s`,
+    }}
+  >
+    {word}
+    <Typography component="span" sx={{ fontWeight: 700 }}>
+      {` +${score}`}
     </Typography>
-    <Typography component="span" sx={{ fontWeight: 700 }} variant="body2">
-      &nbsp;+{score}
-    </Typography>
-  </Box>
+  </Typography>
 );
 
 export default ScoreNotification;

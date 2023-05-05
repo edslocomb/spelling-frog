@@ -10,27 +10,35 @@ class PuzzlesTest < ApplicationSystemTestCase
     visit puzzles_url(id: puzzle.id)
     assert_text "Spelling Frog"
 
+    # randomize word order for solve
+    shuffled_words = puzzle.words.shuffle
+
     # click buttons to enter first word
-    puzzle.words[0].to_s.chars.each do |letter|
+    first_word = shuffled_words.first
+    first_word.to_s.chars.each do |letter|
       click_button letter
     end
-    assert_text puzzle.words[0].to_s.upcase
+    # word is displayed as guess
+    assert_text first_word.to_s.upcase
     assert_selector("span", text: puzzle.required_letter.upcase, style: {color: "rgb(139, 195, 74)"})
     click_button "enter"
-    assert_text puzzle.words.first.to_s.capitalize
+    # score notification appears
+    assert_text "#{first_word.to_s.capitalize} +#{first_word.score}"
+    # score notification disappears
+    assert_no_text "#{first_word.to_s.capitalize} +#{first_word.score}"
+    # word is in found words list
+    assert_text first_word.to_s.capitalize
 
     # enter remaining words via keyboard
-    puzzle.words.slice(1..-1).each do |word|
+    shuffled_words.slice(1..-1).each do |word|
       send_keys word.to_s
       assert_text word.to_s.upcase
       send_keys :return
       assert_text word.to_s.capitalize
     end
 
-    # word using all letters is in bold
+    # word using all letters is in bold in found word list
     assert_selector("span", text: "Madrigal")
-    node = first(:element, "span", text: "milligram", visible: :all)
-    puts node.style("font-weight")
     assert_selector("span", text: "Madrigal", style: {"font-weight": "700"})
     # word using only some letters is normal weight
     assert_selector("span", text: "Milligram", style: {"font-weight": "400"})
