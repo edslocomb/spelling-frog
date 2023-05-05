@@ -8,11 +8,13 @@ import {
 } from "@mui/icons-material";
 import { useLoaderData } from "react-router-dom";
 import { shuffle, unique, omit } from "radash";
+import useExpiringQueue from "./useExpiringQueue";
 import Tiles from "./Tiles";
 import GuessedWordList from "./GuessedWordList";
 import GuessedWordDropdown from "./GuessedWordDropdown";
 import ScoreBar from "./ScoreBar";
 import Guess from "./Guess";
+import ScoreNotification from "./ScoreNotification";
 
 const iconStyles = { fontSize: "50px", padding: "5px" };
 const iconButtonStyles = { margin: "0 20px" };
@@ -101,7 +103,7 @@ const Puzzle = () => {
     if (e.key === "Enter") {
       processGuess();
     } else if (keyModifiers["Control"] && keyModifiers["Alt"]) {
-      // Debugging/Cheat codes, Ctrl+Alt+[arrow key]
+      // Debugging/Cheat codes
       if (e.key === "ArrowUp") {
         setStateOf("guessedWords", []);
       } else if (e.key === "ArrowDown") {
@@ -111,6 +113,9 @@ const Puzzle = () => {
         setStateOf("guessedWords", [...guessedWords, shuffle(missingWords)[0]]);
       } else if (e.key === "ArrowLeft") {
         setStateOf("guessedWords", guessedWords.slice(0, -1));
+      } else if (e.key === "'" && guessedWords.length < words.length) {
+        const missingWords = words.filter((w) => !guessedWords.includes(w));
+        setStateOf("guess", shuffle(missingWords)[0]);
       }
     } else if (modifierKeyNames.includes(e.key) && !keyModifiers[e.key]) {
       setStateOf("keyModifiers", { ...keyModifiers, [e.key]: true });
@@ -141,6 +146,8 @@ const Puzzle = () => {
     };
   });
 
+  const [scoreNotifications, addScoreNotification] = useExpiringQueue<string>();
+
   const processGuess = () => {
     const { guess, guessedWords } = puzzleState;
 
@@ -159,6 +166,7 @@ const Puzzle = () => {
     } else if (!words.includes(guess)) {
       console.log(`"${guess}" is not in the word list`);
     } else {
+      addScoreNotification(guess);
       setPuzzleState({
         ...puzzleState,
         guessedWords: [...guessedWords, guess],
@@ -210,6 +218,24 @@ const Puzzle = () => {
             justifyContent: "flex-start",
           }}
         >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              flexDirection: "column-reverse",
+              height: { xs: "10vh", sm: "20%" },
+              overflow: "hidden",
+            }}
+          >
+            {scoreNotifications.map((word) => (
+              <ScoreNotification
+                key={word}
+                word={word}
+                score={wordScore(word, letters)}
+              />
+            ))}
+          </Box>
           <Guess
             sx={{
               display: "flex",
