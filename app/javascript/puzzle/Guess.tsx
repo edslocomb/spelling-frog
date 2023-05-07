@@ -58,23 +58,42 @@ const RenderLetter = ({ letters, requiredLetter, l }: RenderLetterProps) => {
   return <IllegalLetter letter={l} />;
 };
 
+const jiggly = keyframes`
+  0% { transform: translateX(0) }
+  25% { transform: translateX(-3px) }
+  75% { transform: translateX(3px) }
+  100% { translateX: 0 }
+`;
+
 interface GuessProps {
   guess: string;
   letters: string;
   requiredLetter: string;
+  jiggle?: boolean;
   sx?: SxProps<Theme>;
 }
 
-export const Guess = ({ guess, letters, requiredLetter, sx }: GuessProps) => {
+export const Guess = ({
+  guess,
+  jiggle,
+  letters,
+  requiredLetter,
+  sx,
+}: GuessProps) => {
+  const jiggler = `${jiggly} 0.15s 3`;
+
   return (
     <Box sx={{ textAlign: "center", ...sx }}>
-      <Typography sx={fontStyle} component="span">
+      <Typography
+        sx={{ fontStyle, animation: jiggle ? jiggler : "" }}
+        component="span"
+      >
         {guess.split("").map((l, i) => (
           <RenderLetter
             l={l}
             letters={letters}
             requiredLetter={requiredLetter}
-            key={guess.substr(0, i)}
+            key={guess.slice(0, i)}
           />
         ))}
         <Cursor />

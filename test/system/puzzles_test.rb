@@ -46,16 +46,23 @@ class PuzzlesTest < ApplicationSystemTestCase
     assert_text puzzle.score
   end
 
-  test "guess a word that's not a solution" do
+  test "guessing words and getting notifications" do
     # add some nonsense words to the Word db (but not as solutions to Puzzle.first)
     Word.create("gillam")
     Word.create("gaddy") # 'y' is not in Puzzle.first.letters
+
     puzzle = Puzzle.first
     visit puzzles_url(id: puzzle.id)
 
     send_keys "gillam"
     assert_text "GILLAM"
+    # 'G' should render in green
+    assert_selector("span", text: "G", style: {color: "rgb(139, 195, 74)"})
+    # 'ILLAM' should render in default text color
+    assert_selector("span", text: "G", style: {color: "rgba(0, 0, 0, 0.87)"})
     send_keys :return
+    assert_text "Unknown Word"
+    assert_no_text "Unknown Word" # notification expires
     assert_no_text "Gaddy"
 
     send_keys "gilly"
@@ -63,6 +70,28 @@ class PuzzlesTest < ApplicationSystemTestCase
     # 'Y' should render in grey
     assert_selector("span", text: "Y", style: {color: "rgba(0, 0, 0, 0.38)"})
     send_keys :return
+    assert_text "Extraneous Letter"
+    assert_no_text "Extraneous Letter" # notification expires
     assert_no_text "Gilly"
+
+    send_keys "madrigal"
+    send_keys :return
+    assert_text "Madrigal +15"
+    assert_no_text "Madrigal +15" # notification expires
+
+    send_keys "madrigal"
+    send_keys :return
+    assert_text "Already Found"
+    assert_no_text "Already Found" # notification expires
+
+    send_keys "llama"
+    send_keys :return
+    assert_text "Missing Center Letter"
+    assert_no_text "Missing Center Letter" # notification expires
+
+    send_keys "dig"
+    send_keys :return
+    assert_text "Too Short"
+    assert_no_text "Too Short" # notification expires
   end
 end

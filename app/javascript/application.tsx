@@ -42,6 +42,7 @@ const Root = () => {
     () => responsiveFontSizes(createTheme(modedTheme), { factor: 3 }),
     [mode]
   );
+
   return (
     <React.StrictMode>
       <ThemeProvider theme={theme}>

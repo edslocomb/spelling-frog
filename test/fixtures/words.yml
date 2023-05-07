@@ -64,3 +64,5 @@ rigid:
   name: "rigid"
 zebra:
   name: "zebra"
+llama:
+  name: "llama"

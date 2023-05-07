@@ -8,18 +8,18 @@ interface ScoreNotificationType {
 }
 
 const rise = keyframes`
-  0% { transform: translateY(0) }
-  75% { transform: translateY(-100%); opacity: 1 }
-  100% { transform: translateY(-100%); opacity: 0 }
+  0% { transform: translateY(150%) }
+  75% { transform: translateY(-50%); opacity: 1 }
+  100% { transform: translateY(-50%); opacity: 0 }
 `;
 
 const ScoreNotification = ({ word, score, sx }: ScoreNotificationType) => (
   <Typography
     component="div"
     sx={{
-      ...sx,
       textTransform: "capitalize",
       animation: `${rise} 1s`,
+      ...sx,
     }}
   >
     {word}

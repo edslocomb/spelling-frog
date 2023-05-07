@@ -14,6 +14,7 @@ import GuessedWordList from "./GuessedWordList";
 import GuessedWordDropdown from "./GuessedWordDropdown";
 import ScoreBar from "./ScoreBar";
 import Guess from "./Guess";
+import GuessError from "./GuessError";
 import ScoreNotification from "./ScoreNotification";
 
 const iconStyles = { fontSize: "50px", padding: "5px" };
@@ -59,6 +60,7 @@ export interface PuzzleStateType {
   shuffledLetters: string[];
   guessedWords: string[];
   keyModifiers: { [key in KeyModifier]: boolean };
+  guessError: string;
 }
 
 const Puzzle = () => {
@@ -73,16 +75,18 @@ const Puzzle = () => {
     ],
     guessedWords: [] as string[],
     keyModifiers: {} as { [key in KeyModifier]: boolean },
+    guessError: "",
   } as PuzzleStateType);
 
   function setStateOf<K extends keyof PuzzleStateType>(
     key: K,
     value: PuzzleStateType[K]
   ) {
-    setPuzzleState({ ...puzzleState, [key]: value });
+    setPuzzleState((currentState) => ({ ...currentState, [key]: value }));
   }
 
   const addToGuess = (letter: string) =>
+    puzzleState.guessError === "" &&
     setStateOf("guess", `${puzzleState.guess}${letter}`);
 
   const backspaceGuess = () =>
@@ -152,21 +156,20 @@ const Puzzle = () => {
 
   const processGuess = () => {
     const { guess, guessedWords } = puzzleState;
+    let error = "";
 
-    if (guess === "") {
+    if (guess === "" || puzzleState.guessError !== "") {
       return;
     } else if (!guess.includes(requiredLetter)) {
-      console.log(
-        `"${guess}" does not include "${requiredLetter.toUpperCase()}"`
-      );
+      error = "Missing Center Letter";
     } else if (guess.length < 4) {
-      console.log(`"${guess}" is less than 4 letters long`);
+      error = "Too Short";
     } else if (!guess.split("").every((l) => letters.includes(l))) {
-      console.log(`"${guess}" contains letter not in puzzle`);
+      error = "Extraneous Letter";
     } else if (guessedWords.includes(guess)) {
-      console.log(`"${guess}" already found`);
+      error = "Already Found";
     } else if (!words.includes(guess)) {
-      console.log(`"${guess}" is not in the word list`);
+      error = "Unknown Word";
     } else {
       addScoreNotification(guess);
       setPuzzleState({
@@ -176,7 +179,16 @@ const Puzzle = () => {
       });
       return;
     }
-    setStateOf("guess", "");
+    setTimeout(
+      () =>
+        setPuzzleState((currentPuzzleState) => ({
+          ...currentPuzzleState,
+          guess: "",
+          guessError: "",
+        })),
+      1200
+    );
+    setStateOf("guessError", error);
   };
 
   return (
@@ -224,12 +236,14 @@ const Puzzle = () => {
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "flex-start",
+              justifyContent: "center",
               flexDirection: "column-reverse",
               height: { xs: "10vh", sm: "20%" },
-              overflow: "hidden",
             }}
           >
+            {puzzleState.guessError !== "" && (
+              <GuessError message={puzzleState.guessError} />
+            )}
             {scoreNotifications.map((word) => (
               <ScoreNotification
                 key={word}
@@ -246,6 +260,7 @@ const Puzzle = () => {
               marginBottom: "10px",
             }}
             guess={puzzleState.guess}
+            jiggle={puzzleState.guessError !== ""}
             letters={letters}
             requiredLetter={requiredLetter}
           />
