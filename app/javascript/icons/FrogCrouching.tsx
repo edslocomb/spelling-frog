@@ -9,10 +9,10 @@ export const FrogCrouching = (props: SvgIconProps) => {
       width="400px"
       height="400px"
       {...props}
-      viewBox="100 50 500 450"
+      viewBox="100 25 500 425"
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      sx={sx}
+      sx={{ transform: "scaleX(-1)", ...sx }}
     >
       <script>
         {/* eslint-disable react/jsx-no-comment-textnodes */}

@@ -9,7 +9,7 @@ export const FrogJumping = (props: SvgIconProps) => {
       width="400px"
       height="400px"
       {...props}
-      viewBox="100 50 500 450"
+      viewBox="100 100 500 500"
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
       sx={sx}

@@ -15,40 +15,24 @@ import {
   FrogSmiling,
 } from "../icons/";
 
+const levels = [0.1, 0.2, 0.3, 0.5, 0.7];
+
 interface ScoreFrogProps extends SvgIconProps {
   frogFraction: number;
 }
 const ScoreFrog = ({ frogFraction, ...props }: ScoreFrogProps) => {
-  if (frogFraction > 0.7) {
-    return (
-      <FrogSmiling
-        {...props}
-        color="primary"
-        sx={{ ...(props.sx || {}), transform: "scaleX(-1)" }}
-      />
-    );
-  } else if (frogFraction > 0.5) {
-    return (
-      <FrogLanding
-        {...props}
-        color="primary"
-        sx={{ ...(props.sx || {}), transform: "scaleX(-1)" }}
-      />
-    );
-  } else if (frogFraction > 0.35) {
-    return <FrogJumping color="primary" {...props} />;
-  } else if (frogFraction > 0.2) {
-    return (
-      <FrogCrouching
-        {...props}
-        color="primary"
-        sx={{ ...(props.sx || {}), transform: "scaleX(-1)" }}
-      />
-    );
-  } else if (frogFraction > 0.1) {
-    return <Frog color="primary" {...props} />;
+  if (frogFraction >= levels[4]) {
+    return <FrogSmiling {...props} />;
+  } else if (frogFraction >= levels[3]) {
+    return <FrogLanding {...props} />;
+  } else if (frogFraction >= levels[2]) {
+    return <FrogJumping {...props} />;
+  } else if (frogFraction >= levels[1]) {
+    return <FrogCrouching {...props} />;
+  } else if (frogFraction >= levels[0]) {
+    return <Frog {...props} />;
   }
-  return <Frog color="inherit" opacity={0.1 + 2 * frogFraction} {...props} />;
+  return <Frog {...props} />;
 };
 
 interface ScoreBarProps {
@@ -61,6 +45,8 @@ export const ScoreBar = ({ sx, score, maxScore }: ScoreBarProps) => {
   const winningScore = Math.round(maxScore * 0.7);
   const displayedMax = score >= winningScore ? maxScore : winningScore;
   const frogFraction = score / maxScore;
+  const progressMultiplier = score >= winningScore ? 100 : 100 / 0.7;
+
   return (
     <Box
       sx={{
@@ -72,18 +58,46 @@ export const ScoreBar = ({ sx, score, maxScore }: ScoreBarProps) => {
     >
       <ScoreFrog
         frogFraction={frogFraction}
+        color={frogFraction >= levels[0] ? "primary" : "inherit"}
+        opacity={frogFraction >= levels[0] ? 0.87 : 0.05 + 1.25 * frogFraction}
         sx={{
           width: { xs: "4vh", sm: "2.4em" },
           height: { xs: "4vh", sm: "2.4em" },
-          strokeWidth: "10px",
           marginRight: "0.6em",
         }}
       />
-      <Box sx={{ flexGrow: 1, marginRight: "5px" }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          marginRight: "5px",
+          height: "100%",
+          position: "relative",
+        }}
+      >
+        {levels.map((level) => (
+          <ScoreFrog
+            frogFraction={level}
+            key={`level${level}`}
+            color={frogFraction >= level ? "primary" : "inherit"}
+            opacity={frogFraction >= level ? "0.5" : "0.15"}
+            sx={{
+              position: "absolute",
+              "--size": { xs: "3vh", sm: "1.8em" },
+              left: `calc(${level * progressMultiplier}% - var(--size))`,
+              bottom: "45%",
+              width: "var(--size)",
+              height: "var(--size)",
+              zIndex: -1,
+            }}
+          />
+        ))}
         <LinearProgress
           variant="determinate"
           value={(100 * score) / displayedMax}
-          sx={{ color: "primary.light" }}
+          sx={{
+            color: "primary.light",
+            top: "50%",
+          }}
         />
       </Box>
       <Box
