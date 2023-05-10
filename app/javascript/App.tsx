@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Outlet } from "react-router-dom";
 import { Container, Box, Typography } from "@mui/material";
-import FrogDoodleIcon from "./FrogDoodleIcon";
+import { FrogDoodle } from "./icons/";
 
 const App = () => (
   <Container
@@ -25,7 +25,7 @@ const App = () => (
         color="primary.dark"
         sx={{ display: "flex", alignItems: "center", fontWeight: 400 }}
       >
-        <FrogDoodleIcon
+        <FrogDoodle
           sx={{
             marginTop: "auto",
             marginBottom: "auto",

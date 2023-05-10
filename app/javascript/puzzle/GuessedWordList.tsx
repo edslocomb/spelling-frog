@@ -8,9 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { WordsFoundText } from "./WordsFoundText";
-
-export const usesAllLetters = (word: string, letters: string) =>
-  letters.split("").every((char) => word.includes(char));
+import { usesAllLetters } from "./index";
 
 interface GuessedWordListProps {
   noHeader?: boolean;

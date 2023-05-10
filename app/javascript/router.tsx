@@ -9,7 +9,7 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "puzzles/:puzzleId?",
+        path: "puzzles/:puzzleId",
         element: <Puzzle />,
         loader: puzzleLoader,
       },

@@ -9,8 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-import { GuessedWordList, usesAllLetters } from "./GuessedWordList";
-import { WordsFoundText } from "./WordsFoundText";
+import GuessedWordList from "./GuessedWordList";
+import WordsFoundText from "./WordsFoundText";
+import { usesAllLetters } from "./index";
 
 interface GuessedWordDropdownProps {
   words: string[];

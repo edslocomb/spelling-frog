@@ -1,17 +1,13 @@
 import * as React from "react";
-import { type SVGProps } from "react";
-import { SvgIcon, useTheme, type SvgIconProps } from "@mui/material";
+import { SvgIcon, type SvgIconProps } from "@mui/material";
 
-// credit to vectordoodle for this icon, found here:
-// https://www.svgrepo.com/svg/452895/frog
-
-export const FrogDoodleIcon = (props: SvgIconProps) => {
+export const FrogDoodle = (props: SvgIconProps) => {
   const { sx } = props;
 
   return (
     <SvgIcon
-      width="800px"
-      height="800px"
+      width="400px"
+      height="400px"
       {...props}
       viewBox="0 0 400 400"
       xmlns="http://www.w3.org/2000/svg"
@@ -21,6 +17,13 @@ export const FrogDoodleIcon = (props: SvgIconProps) => {
       strokeLinejoin="round"
       sx={{ ...sx, fill: "none" }}
     >
+      <title>Frog Doodle</title>
+      <script>
+        {/* eslint-disable react/jsx-no-comment-textnodes */}
+        /* Adapted from: Frog SVG Vector, by vectordoodle, Creative Commons
+        Licence, https://www.svgrepo.com/svg/452895/frog */
+        {/* eslint-enable react/jsx-no-comment-textnodes */}
+      </script>
       <path d="M140.126 298C126.478 278.853 54.833 167.153 70.1301 153.966C112.157 117.747 160.987 233.547 169 254.261" />
       <path d="M231 268.972C243.441 246.461 259.817 226.683 274.612 205.819C278.22 200.734 320.083 138.326 322.768 139.006C343.317 144.18 326.022 199.098 305.37 238.087C284.718 277.076 251.134 295.672 251.805 297.023C255.377 304.223 287.8 289.396 292.786 290.026" />
       <path d="M259 298C266.518 299.647 276.168 308.608 279 310" />
@@ -36,4 +39,4 @@ export const FrogDoodleIcon = (props: SvgIconProps) => {
   );
 };
 
-export default FrogDoodleIcon;
+export default FrogDoodle;

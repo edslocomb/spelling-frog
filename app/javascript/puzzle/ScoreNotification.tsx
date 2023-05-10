@@ -8,7 +8,7 @@ interface ScoreNotificationType {
 }
 
 const rise = keyframes`
-  0% { transform: translateY(150%) }
+  0% { transform: translateY(250%) }
   75% { transform: translateY(-50%); opacity: 1 }
   100% { transform: translateY(-50%); opacity: 0 }
 `;

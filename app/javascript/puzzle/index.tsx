@@ -7,7 +7,7 @@ import {
   Refresh,
 } from "@mui/icons-material";
 import { useLoaderData } from "react-router-dom";
-import { shuffle, unique, omit } from "radash";
+import { shuffle, omit } from "radash";
 import useExpiringQueue from "./useExpiringQueue";
 import Tiles from "./Tiles";
 import GuessedWordList from "./GuessedWordList";
@@ -20,11 +20,14 @@ import ScoreNotification from "./ScoreNotification";
 const iconStyles = { fontSize: "50px", padding: "5px" };
 const iconButtonStyles = { margin: "0 20px" };
 
+export const usesAllLetters = (word: string, letters: string) =>
+  letters.split("").every((char) => word.includes(char));
+
 const wordScore = (word: string, letters: string) => {
   if (word.length < 5) {
     return 1;
   }
-  if (unique(word.split("").sort()).join("") === letters) {
+  if (usesAllLetters(word, letters)) {
     return word.length + 7;
   }
   return word.length;
@@ -37,19 +40,19 @@ interface PuzzleProps {
   words: string[];
 }
 
-export async function getPuzzle(id: number): Promise<PuzzleProps> {
+export async function fetchPuzzle(id: number): Promise<PuzzleProps> {
   const response = await fetch(`/puzzles/${id}.json`);
   const json = await response.json();
   return json;
 }
 
-interface loaderParams {
-  params: { puzzleId?: number };
+interface LoaderParams {
+  params: { puzzleId: number };
 }
 
-export async function loader({ params }: loaderParams) {
-  const id = params.puzzleId || 0;
-  return await getPuzzle(id);
+export async function loader({ params }: LoaderParams) {
+  const id = params.puzzleId;
+  return await fetchPuzzle(id);
 }
 
 const modifierKeyNames = ["Alt", "Control", "OS"];
