@@ -15,7 +15,7 @@ import {
   FrogSmiling,
 } from "../icons/";
 
-const levels = [0.1, 0.2, 0.3, 0.5, 0.7];
+const levels = [0.1, 0.25, 0.4, 0.55, 0.7];
 
 interface ScoreFrogProps extends SvgIconProps {
   frogFraction: number;
@@ -59,7 +59,7 @@ export const ScoreBar = ({ sx, score, maxScore }: ScoreBarProps) => {
       <ScoreFrog
         frogFraction={frogFraction}
         color={frogFraction >= levels[0] ? "primary" : "inherit"}
-        opacity={frogFraction >= levels[0] ? 0.87 : 0.05 + 1.25 * frogFraction}
+        opacity={frogFraction >= levels[0] ? 0.87 : 1.25 * frogFraction}
         sx={{
           width: { xs: "4vh", sm: "2.4em" },
           height: { xs: "4vh", sm: "2.4em" },
@@ -74,23 +74,25 @@ export const ScoreBar = ({ sx, score, maxScore }: ScoreBarProps) => {
           position: "relative",
         }}
       >
-        {levels.map((level) => (
-          <ScoreFrog
-            frogFraction={level}
-            key={`level${level}`}
-            color={frogFraction >= level ? "primary" : "inherit"}
-            opacity={frogFraction >= level ? "0.5" : "0.15"}
-            sx={{
-              position: "absolute",
-              "--size": { xs: "3vh", sm: "1.8em" },
-              left: `calc(${level * progressMultiplier}% - var(--size))`,
-              bottom: "45%",
-              width: "var(--size)",
-              height: "var(--size)",
-              zIndex: -1,
-            }}
-          />
-        ))}
+        {levels
+          .filter((_level, i) => frogFraction >= (levels[i - 1] || levels[0]))
+          .map((level) => (
+            <ScoreFrog
+              frogFraction={level}
+              key={`level${level}`}
+              color={frogFraction >= level ? "primary" : "inherit"}
+              opacity={frogFraction >= level ? 0.7 : 0.05}
+              sx={{
+                position: "absolute",
+                "--size": { xs: "3vh", sm: "1.8em" },
+                left: `calc(${level * progressMultiplier}% - var(--size))`,
+                bottom: "45%",
+                width: "var(--size)",
+                height: "var(--size)",
+                zIndex: -1,
+              }}
+            />
+          ))}
         <LinearProgress
           variant="determinate"
           value={(100 * score) / displayedMax}
