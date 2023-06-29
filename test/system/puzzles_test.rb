@@ -7,7 +7,7 @@ class PuzzlesTest < ApplicationSystemTestCase
     assert_equal "adgilmr", puzzle.letters
     assert_equal 31, puzzle.words.count
 
-    visit puzzles_url(id: puzzle.id)
+    visit puzzle_url(id: puzzle.id)
     assert_text "Spelling Frog"
 
     # randomize word order for solve
@@ -52,7 +52,7 @@ class PuzzlesTest < ApplicationSystemTestCase
     Word.create("gaddy") # 'y' is not in Puzzle.first.letters
 
     puzzle = Puzzle.first
-    visit puzzles_url(id: puzzle.id)
+    visit puzzle_url(id: puzzle.id)
 
     send_keys "gillam"
     assert_text "GILLAM"
