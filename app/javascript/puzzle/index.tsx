@@ -7,7 +7,7 @@ import {
   Refresh,
 } from "@mui/icons-material";
 import { useLoaderData } from "react-router-dom";
-import { shuffle, omit } from "radash";
+import { shuffle, omit, assign } from "radash";
 import useExpiringQueue from "./useExpiringQueue";
 import Tiles from "./Tiles";
 import GuessedWordList from "./GuessedWordList";
@@ -16,74 +16,66 @@ import ScoreBar from "./ScoreBar";
 import Guess from "./Guess";
 import GuessError from "./GuessError";
 import ScoreNotification from "./ScoreNotification";
+import { useStore, type Store } from "../store";
+import {
+  PuzzleState,
+  PuzzleDefinition,
+  Puzzle,
+  modifierKeyNames,
+  emptyPuzzleState,
+} from "../types";
+import { wordScore } from "./lib";
 
 const iconStyles = { fontSize: "50px", padding: "5px" };
 const iconButtonStyles = { margin: "0 20px" };
 
-export const usesAllLetters = (word: string, letters: string) =>
-  letters.split("").every((char) => word.includes(char));
-
-const wordScore = (word: string, letters: string) => {
-  if (word.length < 5) {
-    return 1;
-  }
-  if (usesAllLetters(word, letters)) {
-    return word.length + 7;
-  }
-  return word.length;
-};
-
-interface PuzzleProps {
-  letters: string;
-  requiredLetter: string;
-  maxScore: number;
-  words: string[];
-}
-
-export async function fetchPuzzle(id: number): Promise<PuzzleProps> {
+export async function fetchPuzzle(id: string): Promise<PuzzleDefinition> {
   const response = await fetch(`/puzzles/${id}.json`);
   const json = await response.json();
   return json;
 }
 
 interface LoaderParams {
-  params: { puzzleId: number };
+  params: { puzzleId: string };
 }
 
 export async function loader({ params }: LoaderParams) {
-  const id = params.puzzleId;
-  return await fetchPuzzle(id);
-}
+  const { puzzleId } = params;
 
-const modifierKeyNames = ["Alt", "Control", "OS"];
-type KeyModifier = (typeof modifierKeyNames)[number];
-
-export interface PuzzleStateType {
-  guess: string;
-  shuffledLetters: string[];
-  guessedWords: string[];
-  keyModifiers: { [key in KeyModifier]: boolean };
-  guessError: string;
+  const currentState = useStore.getState();
+  if (currentState.puzzles[puzzleId]) {
+    useStore.setState(
+      assign(currentState, { currentPuzzleId: +puzzleId } as Partial<Store>)
+    );
+    console.log(`found puzzle ${puzzleId} in cache`);
+  } else {
+    const puzzleDefinition = await fetchPuzzle(puzzleId);
+    useStore.setState(
+      assign(currentState, {
+        currentPuzzleId: +puzzleId,
+        puzzles: { [puzzleId]: { ...emptyPuzzleState, ...puzzleDefinition } },
+      } as Partial<Store>)
+    );
+  }
+  return null;
 }
 
 const Puzzle = () => {
-  const puzzleProps = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { letters, requiredLetter, words, maxScore } = puzzleProps;
+  useLoaderData();
+  const puzzle = useStore((state) => state.currentPuzzle());
+  const { letters, requiredLetter, words, maxScore } = puzzle;
 
   const [puzzleState, setPuzzleState] = useState({
-    guess: "",
+    ...emptyPuzzleState,
     shuffledLetters: [
       requiredLetter,
       ...letters.split("").filter((l) => l !== requiredLetter),
     ],
-    guessedWords: [] as string[],
-    keyModifiers: {} as { [key in KeyModifier]: boolean },
-    guessError: "",
-  } as PuzzleStateType);
+  } as PuzzleState);
 
-  function setStateOf<K extends keyof PuzzleStateType>(
+  function setStateOf<K extends keyof PuzzleState>(
     key: K,
-    value: PuzzleStateType[K]
+    value: PuzzleState[K]
   ) {
     setPuzzleState((currentState) => ({ ...currentState, [key]: value }));
   }
@@ -102,28 +94,28 @@ const Puzzle = () => {
     ]);
 
   const score = () =>
-    puzzleState.guessedWords
+    puzzleState.foundWords
       .map((w) => wordScore(w, letters))
       .reduce((memo, s) => memo + s, 0);
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    const { keyModifiers, guessedWords } = puzzleState;
+    const { keyModifiers, foundWords } = puzzleState;
 
     if (e.key === "Enter") {
       processGuess();
     } else if (keyModifiers["Control"] && keyModifiers["Alt"]) {
       // Debugging/Cheat codes
       if (e.key === "ArrowUp") {
-        setStateOf("guessedWords", []);
+        setStateOf("foundWords", []);
       } else if (e.key === "ArrowDown") {
-        setStateOf("guessedWords", shuffle(words.slice()));
-      } else if (e.key === "ArrowRight" && guessedWords.length < words.length) {
-        const missingWords = words.filter((w) => !guessedWords.includes(w));
-        setStateOf("guessedWords", [...guessedWords, shuffle(missingWords)[0]]);
+        setStateOf("foundWords", shuffle(words.slice()));
+      } else if (e.key === "ArrowRight" && foundWords.length < words.length) {
+        const missingWords = words.filter((w) => !foundWords.includes(w));
+        setStateOf("foundWords", [...foundWords, shuffle(missingWords)[0]]);
       } else if (e.key === "ArrowLeft") {
-        setStateOf("guessedWords", guessedWords.slice(0, -1));
-      } else if (e.key === "'" && guessedWords.length < words.length) {
-        const missingWords = words.filter((w) => !guessedWords.includes(w));
+        setStateOf("foundWords", foundWords.slice(0, -1));
+      } else if (e.key === "'" && foundWords.length < words.length) {
+        const missingWords = words.filter((w) => !foundWords.includes(w));
         setStateOf("guess", shuffle(missingWords)[0]);
       }
     } else if (modifierKeyNames.includes(e.key) && !keyModifiers[e.key]) {
@@ -158,7 +150,7 @@ const Puzzle = () => {
   const [scoreNotifications, addScoreNotification] = useExpiringQueue<string>();
 
   const processGuess = () => {
-    const { guess, guessedWords } = puzzleState;
+    const { guess, foundWords } = puzzleState;
     let error = "";
 
     if (guess === "" || puzzleState.guessError !== "") {
@@ -169,7 +161,7 @@ const Puzzle = () => {
       error = "Too Short";
     } else if (!guess.split("").every((l) => letters.includes(l))) {
       error = "Extraneous Letter";
-    } else if (guessedWords.includes(guess)) {
+    } else if (foundWords.includes(guess)) {
       error = "Already Found";
     } else if (!words.includes(guess)) {
       error = "Unknown Word";
@@ -177,7 +169,7 @@ const Puzzle = () => {
       addScoreNotification(guess);
       setPuzzleState({
         ...puzzleState,
-        guessedWords: [...guessedWords, guess],
+        foundWords: [...foundWords, guess],
         guess: "",
       });
       return;
@@ -221,7 +213,7 @@ const Puzzle = () => {
             }}
           />
           <GuessedWordDropdown
-            words={puzzleState.guessedWords}
+            words={puzzleState.foundWords}
             letters={letters}
             sx={{ width: "calc(100vw - 32px)", maxHeight: "80vh" }}
             guessedWordListSx={{ height: "72vh" }}
@@ -306,7 +298,7 @@ const Puzzle = () => {
         />
         <GuessedWordList
           letters={letters}
-          words={puzzleState.guessedWords}
+          words={puzzleState.foundWords}
           sx={{
             border: "1.5px solid",
             borderColor: "divider",

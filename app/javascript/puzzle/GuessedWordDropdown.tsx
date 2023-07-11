@@ -11,7 +11,7 @@ import {
 import { ExpandMore } from "@mui/icons-material";
 import GuessedWordList from "./GuessedWordList";
 import WordsFoundText from "./WordsFoundText";
-import { usesAllLetters } from "./index";
+import { usesAllLetters } from "./lib";
 
 interface GuessedWordDropdownProps {
   words: string[];

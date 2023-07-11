@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { WordsFoundText } from "./WordsFoundText";
-import { usesAllLetters } from "./index";
+import { usesAllLetters } from "./lib";
 
 interface GuessedWordListProps {
   noHeader?: boolean;
