@@ -1,19 +1,9 @@
 import { create, StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { assign } from "radash";
-import { Puzzle } from "./types";
-
-interface Puzzles {
-  currentPuzzleId: number;
-  puzzles: { [key: string]: Puzzle };
-}
-
-interface PuzzleActions {
-  currentPuzzle: () => Puzzle;
-}
-
-export type Store = Puzzles & PuzzleActions;
+import { assign, shuffle } from "radash";
+import { shuffleLetters } from "./puzzle/lib";
+import { Puzzles, PuzzleActions } from "./types";
 
 export type StoreSlice<T> = StateCreator<
   Store,
@@ -27,8 +17,50 @@ const createPuzzlesSlice: StoreSlice<Puzzles> = () => ({
   puzzles: {},
 });
 
-const createPuzzleActionsSlice: StoreSlice<PuzzleActions> = (set, get) => ({
-  currentPuzzle: () => get().puzzles[get().currentPuzzleId],
+interface PuzzleActionSlice {
+  actions: PuzzleActions;
+}
+
+export type Store = Puzzles & PuzzleActionSlice;
+
+export const currentPuzzle = (state: Store) =>
+  state.puzzles[state.currentPuzzleId];
+
+const createPuzzleActionsSlice: StoreSlice<PuzzleActionSlice> = (set) => ({
+  actions: {
+    addFoundWord: (word) =>
+      set((state) => {
+        const foundWords = currentPuzzle(state).foundWords;
+        currentPuzzle(state).foundWords = [...foundWords, word];
+      }),
+    shuffle: () =>
+      set((state) => {
+        console.log("calling shuffle");
+        const puzzle = currentPuzzle(state);
+        puzzle.shuffledLetters = shuffleLetters(puzzle);
+      }),
+    cheats: {
+      reset: () => set((state) => (currentPuzzle(state).foundWords = [])),
+      solve: () =>
+        set((state) => {
+          const puzzle = currentPuzzle(state);
+          puzzle.foundWords = shuffle([...puzzle.words]);
+        }),
+      findNext: () =>
+        set((state) => {
+          const puzzle = currentPuzzle(state);
+          const missingWords = puzzle.words.filter(
+            (w) => !puzzle.foundWords.includes(w)
+          );
+          puzzle.foundWords.push(shuffle(missingWords)[0]);
+        }),
+      removeLast: () =>
+        set((state) => {
+          const puzzle = currentPuzzle(state);
+          puzzle.foundWords = puzzle.foundWords.slice(0, -1);
+        }),
+    },
+  },
 });
 
 export const useStore = create<Store>()(

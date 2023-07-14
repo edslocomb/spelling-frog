@@ -1,3 +1,6 @@
+import { shuffle } from "radash";
+import { PuzzleDefinition } from "../types";
+
 export const usesAllLetters = (word: string, letters: string) =>
   letters.split("").every((char) => word.includes(char));
 
@@ -10,3 +13,11 @@ export const wordScore = (word: string, letters: string) => {
   }
   return word.length;
 };
+
+export function shuffleLetters(puzzle: PuzzleDefinition) {
+  const { requiredLetter, letters } = puzzle;
+  return [
+    requiredLetter,
+    ...shuffle(letters.split("").filter((l) => l !== requiredLetter)),
+  ];
+}

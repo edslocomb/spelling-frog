@@ -1,20 +1,11 @@
-export const modifierKeyNames = ["Alt", "Control", "OS"];
-export type KeyModifier = (typeof modifierKeyNames)[number];
-
 export interface PuzzleState {
-  guess: string;
   shuffledLetters: string[];
   foundWords: string[];
-  keyModifiers: { [key in KeyModifier]: boolean };
-  guessError: string;
 }
 
 export const emptyPuzzleState = {
-  guess: "",
   shuffledLetters: [],
   foundWords: [],
-  keyModifiers: {},
-  guessError: "",
 } as PuzzleState;
 
 export interface PuzzleDefinition {
@@ -34,3 +25,19 @@ export const emptyPuzzleDefinition = {
 } as PuzzleDefinition;
 
 export interface Puzzle extends PuzzleDefinition, PuzzleState {}
+
+export interface Puzzles {
+  currentPuzzleId: number;
+  puzzles: { [key: string]: Puzzle };
+}
+
+export interface PuzzleActions {
+  addFoundWord: (word: string) => void;
+  shuffle: () => void;
+  cheats: {
+    reset: () => void;
+    solve: () => void;
+    findNext: () => void;
+    removeLast: () => void;
+  };
+}
