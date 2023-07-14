@@ -102,10 +102,7 @@ const Puzzle = () => {
         </Box>
         <GameBoard
           actions={actions}
-          letters={shuffledLetters.join("")}
-          requiredLetter={requiredLetter}
-          foundWords={foundWords}
-          solutions={words}
+          puzzle={puzzle}
           sx={{
             display: "flex",
             flexDirection: "column",

@@ -1,96 +1,17 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import {
-  Box,
-  IconButton,
-  SxProps,
-  Theme,
-  Typography,
-  keyframes,
-} from "@mui/material";
-import {
-  BackspaceOutlined,
-  KeyboardReturn,
-  Refresh,
-} from "@mui/icons-material";
+import { Box, SxProps, Theme } from "@mui/material";
 import { shuffle, omit } from "radash";
 
-import { wordScore } from "../lib";
-import Error from "./Error";
-import ScoreNotification from "./ScoreNotification";
-import Tiles from "./Tiles";
+import Guess from "./guess";
+import Notifications from "./notifications";
+import LetterButtons from "./letterbuttons";
+import ControlButtons from "./ControlButtons";
 import { useExpiringQueue } from "./useExpiringQueue";
-import { PuzzleActions } from "../../types";
+import { PuzzleActions, Puzzle } from "../../types";
 
-const fontStyle = {
-  fontSize: "35px",
-  fontWeight: 600,
-  textTransform: "uppercase",
-};
-
-const cursorKeyframes = keyframes`
-  0% { opacity: 0; }
-  25% { opacity: 1 }
-  75% { opacity: 1 }
-  100% { opacity: 0 }
-`;
-
-const Cursor = () => (
-  <Typography
-    color="secondary"
-    component="span"
-    sx={{
-      ...fontStyle,
-      animation: `${cursorKeyframes} 1s infinite ease-in-out`,
-    }}
-  >
-    |
-  </Typography>
-);
-
-interface LetterProps {
-  letter: string;
-}
-
-const RequiredLetter = ({ letter }: LetterProps) => (
-  <Typography component="span" color="primary" sx={fontStyle}>
-    {letter}
-  </Typography>
-);
-
-const IllegalLetter = ({ letter }: LetterProps) => (
-  <Typography component="span" color="text.disabled" sx={fontStyle}>
-    {letter}
-  </Typography>
-);
-
-interface RenderLetterProps {
-  l: string;
-  letters: string;
-  requiredLetter: string;
-}
-
-const RenderLetter = ({ letters, requiredLetter, l }: RenderLetterProps) => {
-  if (l === requiredLetter) {
-    return <RequiredLetter letter={l} />;
-  } else if (letters.includes(l)) {
-    return <>{l}</>;
-  }
-  return <IllegalLetter letter={l} />;
-};
-
-const jiggly = keyframes`
-  0% { transform: translateX(0) }
-  25% { transform: translateX(-3px) }
-  75% { transform: translateX(3px) }
-  100% { translateX: 0 }
-`;
-
-const iconStyles = { fontSize: "50px", padding: "5px" };
-const iconButtonStyles = { margin: "0 20px" };
-
-export const modifierKeyNames = ["Alt", "Control", "OS"];
-export type KeyModifier = (typeof modifierKeyNames)[number];
+const modifierKeyNames = ["Alt", "Control", "OS"];
+type KeyModifier = (typeof modifierKeyNames)[number];
 
 interface GuessState {
   guess: string;
@@ -106,26 +27,20 @@ const emptyGuessState = {
 
 interface GameBoardProps {
   actions: PuzzleActions;
-  letters: string;
-  requiredLetter: string;
-  foundWords: string[];
-  solutions: string[];
+  puzzle: Puzzle;
   sx?: SxProps<Theme>;
 }
 
-export const GameBoard = ({
-  actions,
-  letters,
-  requiredLetter,
-  foundWords,
-  solutions,
-  sx,
-}: GameBoardProps) => {
-  const jiggler = `${jiggly} 0.15s 3`;
+export const GameBoard = ({ actions, puzzle, sx }: GameBoardProps) => {
+  const {
+    letters,
+    requiredLetter,
+    foundWords,
+    words: solutions,
+    shuffledLetters,
+  } = puzzle;
 
   const [guessState, setGuessState] = useState(emptyGuessState as GuessState);
-  const guess = guessState.guess;
-  const jiggle = guessState.guessError !== "";
 
   function setStateOf<K extends keyof GuessState>(
     key: K,
@@ -231,7 +146,10 @@ export const GameBoard = ({
 
   return (
     <Box sx={sx}>
-      <Box
+      <Notifications
+        error={guessState.guessError}
+        scoreNotifications={scoreNotifications}
+        letters={puzzle.letters}
         sx={{
           display: "flex",
           alignItems: "center",
@@ -239,19 +157,11 @@ export const GameBoard = ({
           flexDirection: "column-reverse",
           height: { xs: "10vh", sm: "20%" },
         }}
-      >
-        {guessState.guessError !== "" && (
-          <Error message={guessState.guessError} />
-        )}
-        {scoreNotifications.map((word) => (
-          <ScoreNotification
-            key={word}
-            word={word}
-            score={wordScore(word, letters)}
-          />
-        ))}
-      </Box>
-      <Box
+      />
+      <Guess
+        guess={guessState.guess}
+        jiggle={guessState.guessError !== ""}
+        puzzle={puzzle}
         sx={{
           textAlign: "center",
           display: "flex",
@@ -259,39 +169,13 @@ export const GameBoard = ({
           justifyContent: "center",
           marginBottom: "10px",
         }}
-      >
-        <Typography
-          sx={{ fontStyle, animation: jiggle ? jiggler : "" }}
-          component="span"
-        >
-          {guess.split("").map((l, i) => (
-            <RenderLetter
-              l={l}
-              letters={letters}
-              requiredLetter={requiredLetter}
-              key={guess.slice(0, i)}
-            />
-          ))}
-          <Cursor />
-        </Typography>
-      </Box>
-      <Tiles addToGuess={addToGuess} letters={letters} />
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <IconButton sx={iconButtonStyles} onClick={backspaceGuess}>
-          <BackspaceOutlined sx={iconStyles} />
-        </IconButton>
-        <IconButton sx={iconButtonStyles} onClick={actions.shuffle}>
-          <Refresh sx={iconStyles} />
-        </IconButton>
-        <IconButton
-          sx={iconButtonStyles}
-          onClick={processGuess}
-          color="primary"
-          id="enter"
-        >
-          <KeyboardReturn sx={iconStyles} />
-        </IconButton>
-      </Box>
+      />
+      <LetterButtons addToGuess={addToGuess} letters={shuffledLetters} />
+      <ControlButtons
+        enter={processGuess}
+        backspace={backspaceGuess}
+        shuffle={actions.shuffle}
+      />
     </Box>
   );
 };

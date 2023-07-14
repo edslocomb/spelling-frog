@@ -30,12 +30,11 @@ const createPuzzleActionsSlice: StoreSlice<PuzzleActionSlice> = (set) => ({
   actions: {
     addFoundWord: (word) =>
       set((state) => {
-        const foundWords = currentPuzzle(state).foundWords;
-        currentPuzzle(state).foundWords = [...foundWords, word];
+        const puzzle = currentPuzzle(state);
+        puzzle.foundWords = [...puzzle.foundWords, word];
       }),
     shuffle: () =>
       set((state) => {
-        console.log("calling shuffle");
         const puzzle = currentPuzzle(state);
         puzzle.shuffledLetters = shuffleLetters(puzzle);
       }),

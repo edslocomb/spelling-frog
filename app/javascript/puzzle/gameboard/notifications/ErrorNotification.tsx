@@ -1,12 +1,12 @@
 import * as React from "react";
 import { Typography, SxProps, Theme, useTheme } from "@mui/material";
 
-interface GuessErrorProps {
+interface ErrorNotificationProps {
   message: string;
   sx?: SxProps<Theme>;
 }
 
-export const GuessError = ({ message, sx }: GuessErrorProps) => {
+export const ErrorNotification = ({ message, sx }: ErrorNotificationProps) => {
   const theme = useTheme();
   const colors =
     theme.palette.mode === "light"
@@ -31,4 +31,4 @@ export const GuessError = ({ message, sx }: GuessErrorProps) => {
   );
 };
 
-export default GuessError;
+export default ErrorNotification;
