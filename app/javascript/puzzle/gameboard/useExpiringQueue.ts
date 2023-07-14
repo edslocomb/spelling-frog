@@ -6,9 +6,9 @@ interface QueueItemType<T> {
   timerId: number;
 }
 
-export function useExpiringQueue<T>(
-  delay = 1000
-): [T[], (value: T) => void, (id: number) => void] {
+// A simple React Hook implementing a queue whose elements remove
+// themselves after a specified delay (1 second default)
+export function useExpiringQueue<T>(delay = 1000): [T[], (value: T) => void] {
   const initialState = {
     items: [] as QueueItemType<T>[],
     nextId: 0,
@@ -38,7 +38,7 @@ export function useExpiringQueue<T>(
       };
     });
 
-  return [state.items.map((i) => i.value), add, remove];
+  return [state.items.map((i) => i.value), add];
 }
 
 export default useExpiringQueue;
