@@ -41,6 +41,11 @@
       "plugin:react/jsx-runtime",
       "prettier"
     ],
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    },
     "root": true
   },
   "eslintIgnore": [
