@@ -14,15 +14,15 @@ const modifierKeyNames = ["Alt", "Control", "OS"];
 type KeyModifier = (typeof modifierKeyNames)[number];
 
 interface GuessState {
-  guess: string;
+  word: string;
   keyModifiers: { [key in KeyModifier]: boolean };
-  guessError: string;
+  error: string;
 }
 
 const emptyGuessState = {
-  guess: "",
+  word: "",
   keyModifiers: {},
-  guessError: "",
+  error: "",
 };
 
 interface GameBoardProps {
@@ -42,19 +42,11 @@ export const GameBoard = ({ actions, puzzle, sx }: GameBoardProps) => {
 
   const [guessState, setGuessState] = useState(emptyGuessState as GuessState);
 
-  function setStateOf<K extends keyof GuessState>(
-    key: K,
-    value: GuessState[K]
-  ) {
-    setGuessState((currentState) => ({ ...currentState, [key]: value }));
-  }
-
+  const setGuess = (word: string) =>
+    setGuessState({ ...guessState, word: word });
   const addToGuess = (letter: string) =>
-    guessState.guessError === "" &&
-    setStateOf("guess", `${guessState.guess}${letter}`);
-
-  const backspaceGuess = () =>
-    setStateOf("guess", guessState.guess.slice(0, -1));
+    guessState.error === "" && setGuess(`${guessState.word}${letter}`);
+  const backspaceGuess = () => setGuess(guessState.word.slice(0, -1));
 
   const handleKeyDown = (e: KeyboardEvent) => {
     const { keyModifiers } = guessState;
@@ -76,10 +68,13 @@ export const GameBoard = ({ actions, puzzle, sx }: GameBoardProps) => {
         actions.cheats.removeLast();
       } else if (e.key === "'" && foundWords.length < solutions.length) {
         const missingWords = solutions.filter((w) => !foundWords.includes(w));
-        setStateOf("guess", shuffle(missingWords)[0]);
+        setGuess(shuffle(missingWords)[0]);
       }
     } else if (modifierKeyNames.includes(e.key) && !keyModifiers[e.key]) {
-      setStateOf("keyModifiers", { ...keyModifiers, [e.key]: true });
+      setGuessState({
+        ...guessState,
+        keyModifiers: { ...keyModifiers, [e.key]: true },
+      });
     } else if (Object.keys(keyModifiers).length === 0) {
       if (e.key === "Backspace") {
         backspaceGuess();
@@ -93,7 +88,10 @@ export const GameBoard = ({ actions, puzzle, sx }: GameBoardProps) => {
 
   const handleKeyUp = (e: KeyboardEvent) => {
     if (guessState.keyModifiers[e.key]) {
-      setStateOf("keyModifiers", omit(guessState.keyModifiers, [e.key]));
+      setGuessState({
+        ...guessState,
+        keyModifiers: omit(guessState.keyModifiers, [e.key]),
+      });
     }
   };
 
@@ -110,10 +108,10 @@ export const GameBoard = ({ actions, puzzle, sx }: GameBoardProps) => {
   const [scoreNotifications, addScoreNotification] = useExpiringQueue<string>();
 
   const processGuess = () => {
-    const { guess } = guessState;
+    const { word: guess } = guessState;
     let error = "";
 
-    if (guess === "" || guessState.guessError !== "") {
+    if (guess === "" || guessState.error !== "") {
       return;
     } else if (!guess.includes(requiredLetter)) {
       error = "Missing Center Letter";
@@ -127,27 +125,27 @@ export const GameBoard = ({ actions, puzzle, sx }: GameBoardProps) => {
       error = "Unknown Word";
     } else {
       addScoreNotification(guess);
-      setStateOf("guess", "");
+      setGuess("");
       actions.addFoundWord(guess);
       return;
     }
 
     setTimeout(
       () =>
-        setGuessState((currentGuessState) => ({
-          ...currentGuessState,
-          guess: "",
-          guessError: "",
+        setGuessState((currentState) => ({
+          keyModifiers: currentState.keyModifiers,
+          word: "",
+          error: "",
         })),
       1200
     );
-    setStateOf("guessError", error);
+    setGuessState({ ...guessState, error });
   };
 
   return (
     <Box sx={sx}>
       <Notifications
-        error={guessState.guessError}
+        error={guessState.error}
         scoreNotifications={scoreNotifications}
         letters={puzzle.letters}
         sx={{
@@ -155,12 +153,12 @@ export const GameBoard = ({ actions, puzzle, sx }: GameBoardProps) => {
           alignItems: "center",
           justifyContent: "center",
           flexDirection: "column-reverse",
-          height: { xs: "10vh", sm: "20%" },
+          height: { xs: "2.4rem", sm: "20%" },
         }}
       />
       <Guess
-        guess={guessState.guess}
-        jiggle={guessState.guessError !== ""}
+        guess={guessState.word}
+        jiggle={guessState.error !== ""}
         puzzle={puzzle}
         sx={{
           textAlign: "center",
@@ -170,11 +168,16 @@ export const GameBoard = ({ actions, puzzle, sx }: GameBoardProps) => {
           marginBottom: "10px",
         }}
       />
-      <LetterButtons addToGuess={addToGuess} letters={shuffledLetters} />
+      <LetterButtons
+        addToGuess={addToGuess}
+        letters={shuffledLetters}
+        sx={{ display: "flex", justifyContent: "center" }}
+      />
       <ControlButtons
         enter={processGuess}
         backspace={backspaceGuess}
         shuffle={actions.shuffle}
+        sx={{ display: "flex", justifyContent: "center" }}
       />
     </Box>
   );
