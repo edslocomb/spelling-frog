@@ -53,7 +53,7 @@ export const GuessedWordDropdown = ({
               </Typography>
             ) : (
               `${w} `
-            )
+            ),
           )}
       </Typography>
     );

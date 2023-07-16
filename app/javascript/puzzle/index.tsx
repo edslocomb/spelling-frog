@@ -26,7 +26,7 @@ export async function loader({ params }: LoaderParams) {
   const currentState = useStore.getState();
   if (currentState.puzzles[puzzleId]) {
     useStore.setState(
-      assign(currentState, { currentPuzzleId: +puzzleId } as Partial<Store>)
+      assign(currentState, { currentPuzzleId: +puzzleId } as Partial<Store>),
     );
   } else {
     const puzzleDefinition = await fetchPuzzle(puzzleId);
@@ -40,7 +40,7 @@ export async function loader({ params }: LoaderParams) {
             shuffledLetters: shuffleLetters(puzzleDefinition),
           },
         },
-      } as Partial<Store>)
+      } as Partial<Store>),
     );
   }
   return useStore.getState().puzzles[useStore.getState().currentPuzzleId];

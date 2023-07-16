@@ -136,7 +136,7 @@ export const GameBoard = ({ actions, puzzle, sx }: GameBoardProps) => {
           word: "",
           error: "",
         })),
-      1200
+      1200,
     );
     setGuessState({ ...guessState, error });
   };

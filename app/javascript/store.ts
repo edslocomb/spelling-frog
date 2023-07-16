@@ -52,7 +52,7 @@ const createPuzzleActionsSlice: StoreSlice<PuzzleActionSlice> = (set) => ({
         set((state) => {
           const puzzle = currentPuzzle(state);
           const missingWords = puzzle.words.filter(
-            (w) => !puzzle.foundWords.includes(w)
+            (w) => !puzzle.foundWords.includes(w),
           );
           puzzle.foundWords.push(shuffle(missingWords)[0]);
         }),
@@ -74,8 +74,8 @@ export const useStore = create<Store>()(
     {
       name: "spelling-frog",
       merge: (persisted, current) => assign(persisted as Store, current),
-    }
-  )
+    },
+  ),
 );
 
 export default useStore;

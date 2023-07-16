@@ -39,7 +39,7 @@ const Root = () => {
   const modedTheme = assign(themeCustomizations, { palette: { mode: mode } });
   const theme = useMemo(
     () => responsiveFontSizes(createTheme(modedTheme), { factor: 3 }),
-    [mode]
+    [mode],
   );
 
   return (
