@@ -39,7 +39,10 @@ const createPuzzleActionsSlice: StoreSlice<PuzzleActionSlice> = (set) => ({
         puzzle.shuffledLetters = shuffleLetters(puzzle);
       }),
     cheats: {
-      reset: () => set((state) => (currentPuzzle(state).foundWords = [])),
+      reset: () =>
+        set((state) => {
+          currentPuzzle(state).foundWords = [];
+        }),
       solve: () =>
         set((state) => {
           const puzzle = currentPuzzle(state);
