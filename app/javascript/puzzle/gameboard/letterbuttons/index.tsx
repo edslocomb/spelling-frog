@@ -20,7 +20,7 @@ export const LetterButtons = ({
   sx,
 }: LetterButtonsProps) => {
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", ...sx }}>
+    <Box sx={sx}>
       <Box sx={letterButtonColumnSx}>
         <LetterButton letter={letters[1]} addToGuess={addToGuess} />
         <LetterButton letter={letters[2]} addToGuess={addToGuess} />

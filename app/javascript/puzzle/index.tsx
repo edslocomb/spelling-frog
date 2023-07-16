@@ -52,14 +52,7 @@ const Puzzle = () => {
 
   const puzzle = useStore((state) => currentPuzzle(state));
 
-  const {
-    letters,
-    requiredLetter,
-    words,
-    maxScore,
-    foundWords,
-    shuffledLetters,
-  } = puzzle;
+  const { letters, maxScore, foundWords } = puzzle;
 
   const actions = useStore((state) => state.actions);
 
@@ -88,8 +81,7 @@ const Puzzle = () => {
             score={score}
             maxScore={maxScore}
             sx={{
-              width: "100%",
-              height: "5vh",
+              height: "5ch",
               paddingBottom: "5px",
             }}
           />

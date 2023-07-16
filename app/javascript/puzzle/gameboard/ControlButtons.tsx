@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, SxProps, Theme } from "@mui/material";
 import {
   BackspaceOutlined,
   KeyboardReturn,
@@ -7,16 +7,22 @@ import {
 } from "@mui/icons-material";
 
 const iconStyles = { fontSize: "50px", padding: "5px" };
-const iconButtonStyles = { margin: "0 20px" };
+const iconButtonStyles = { margin: { xs: "0 10px", sm: "0 20px" } };
 
 interface ControlButtonProps {
   backspace: () => void;
   shuffle: () => void;
   enter: () => void;
+  sx?: SxProps<Theme>;
 }
 
-const ControlButtons = ({ backspace, shuffle, enter }: ControlButtonProps) => (
-  <Box sx={{ display: "flex", justifyContent: "center" }}>
+const ControlButtons = ({
+  backspace,
+  shuffle,
+  enter,
+  sx,
+}: ControlButtonProps) => (
+  <Box sx={sx}>
     <IconButton sx={iconButtonStyles} onClick={backspace}>
       <BackspaceOutlined sx={iconStyles} />
     </IconButton>

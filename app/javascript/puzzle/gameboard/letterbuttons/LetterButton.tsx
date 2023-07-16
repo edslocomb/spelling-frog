@@ -27,12 +27,12 @@ export const LetterButton = ({
         ...borderWidth,
         borderColor: "divider",
         borderRadius: "50%",
-        fontSize: "25px",
+        fontSize: "1.5rem",
         fontWeight: 700,
         marginTop: "5px",
         marginBottom: "6px",
-        width: "85px",
-        height: "85px",
+        width: "5rem",
+        height: "5rem",
       }}
     >
       {letter}
