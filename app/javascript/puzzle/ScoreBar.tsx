@@ -18,22 +18,31 @@ import {
 const levels = [0.1, 0.25, 0.4, 0.55, 0.7];
 
 interface ScoreFrogProps extends SvgIconProps {
-  frogFraction: number;
+  level: number;
 }
-const ScoreFrog = ({ frogFraction, ...props }: ScoreFrogProps) => {
-  if (frogFraction >= levels[4]) {
+const ScoreFrog = ({ level, ...props }: ScoreFrogProps) => {
+  if (level >= levels[4]) {
     return <FrogSmiling {...props} />;
-  } else if (frogFraction >= levels[3]) {
+  } else if (level >= levels[3]) {
     return <FrogLanding {...props} />;
-  } else if (frogFraction >= levels[2]) {
+  } else if (level >= levels[2]) {
     return <FrogJumping {...props} />;
-  } else if (frogFraction >= levels[1]) {
+  } else if (level >= levels[1]) {
     return <FrogCrouching {...props} />;
-  } else if (frogFraction >= levels[0]) {
+  } else if (level >= levels[0]) {
     return <Frog {...props} />;
   }
   return <Frog {...props} />;
 };
+
+function frogOpacity(frogFraction: number, levelIndex: number) {
+  const level = levels[levelIndex];
+  if (frogFraction >= level) {
+    return 1.0;
+  }
+  const previousLevel = levels[levelIndex - 1] || 0;
+  return (0.2 * (frogFraction - previousLevel)) / (level - previousLevel);
+}
 
 interface ScoreBarProps {
   score: number;
@@ -44,6 +53,7 @@ interface ScoreBarProps {
 export const ScoreBar = ({ sx, score, maxScore }: ScoreBarProps) => {
   const winningScore = Math.round(maxScore * 0.7);
   const displayedMax = score >= winningScore ? maxScore : winningScore;
+  // indulging in a game design reference with this next variable name
   const frogFraction = score / maxScore;
   const progressMultiplier = score >= winningScore ? 100 : 100 / 0.7;
 
@@ -56,16 +66,6 @@ export const ScoreBar = ({ sx, score, maxScore }: ScoreBarProps) => {
         ...sx,
       }}
     >
-      <ScoreFrog
-        frogFraction={frogFraction}
-        color={frogFraction >= levels[0] ? "primary" : "inherit"}
-        opacity={frogFraction >= levels[0] ? 0.87 : 1.25 * frogFraction}
-        sx={{
-          width: { xs: "4vh", sm: "2.4em" },
-          height: { xs: "4vh", sm: "2.4em" },
-          marginRight: "0.6em",
-        }}
-      />
       <Box
         sx={{
           flexGrow: 1,
@@ -75,16 +75,16 @@ export const ScoreBar = ({ sx, score, maxScore }: ScoreBarProps) => {
         }}
       >
         {levels
-          .filter((_level, i) => frogFraction >= (levels[i - 1] || levels[0]))
-          .map((level) => (
+          .filter((_level, i) => frogFraction >= (levels[i - 1] || 0))
+          .map((level, i) => (
             <ScoreFrog
-              frogFraction={level}
+              level={level}
               key={`level${level}`}
               color={frogFraction >= level ? "primary" : "inherit"}
-              opacity={frogFraction >= level ? 0.7 : 0.05}
+              opacity={frogOpacity(frogFraction, i)}
               sx={{
                 position: "absolute",
-                "--size": { xs: "3vh", sm: "1.8em" },
+                "--size": { xs: "2.4ch", sm: "4ch" },
                 left: `calc(${level * progressMultiplier}% - var(--size))`,
                 bottom: "45%",
                 width: "var(--size)",
@@ -107,19 +107,14 @@ export const ScoreBar = ({ sx, score, maxScore }: ScoreBarProps) => {
           display: "flex",
           justifyContent: "center",
           alignContent: "center",
-          minWidth: { xs: "4vh", sm: "2.4em" },
-          height: { xs: "4vh", sm: "2.4em" },
+          minWidth: "4ch",
+          height: "4ch",
           bgcolor: "secondary.main",
           borderRadius: "5px",
-          padding: { xs: "1vh", sm: ".8em" },
+          padding: "0.5ch",
         }}
       >
-        <Typography
-          variant="button"
-          color="black"
-          component="div"
-          sx={{ lineHeight: { xs: "2vh", sm: "1em" } }}
-        >
+        <Typography variant="button" color="black" component="div">
           {score}
         </Typography>
       </Box>
