@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Box, Typography, Theme, SxProps, keyframes } from "@mui/material";
 import Cursor from "./Cursor";
 import GuessLetter from "./GuessLetter";

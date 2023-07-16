@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState, useEffect } from "react";
 import { Box, SxProps, Theme } from "@mui/material";
 import { shuffle, omit } from "radash";

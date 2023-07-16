@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Outlet } from "react-router-dom";
 import { Container, Box, Typography } from "@mui/material";
 import { FrogDoodle } from "./icons/";

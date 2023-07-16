@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Typography, keyframes } from "@mui/material";
 import { fontStyle } from "./style";
 

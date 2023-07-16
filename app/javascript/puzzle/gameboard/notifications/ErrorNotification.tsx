@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Typography, SxProps, Theme, useTheme } from "@mui/material";
 
 interface ErrorNotificationProps {

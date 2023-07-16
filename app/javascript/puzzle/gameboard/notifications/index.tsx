@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Box, SxProps, Theme } from "@mui/material";
 import ScoreNotification from "./ScoreNotification";
 import ErrorNotification from "./ErrorNotification";

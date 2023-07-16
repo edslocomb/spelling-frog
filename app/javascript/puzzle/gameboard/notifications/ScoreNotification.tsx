@@ -1,4 +1,3 @@
-import * as React from "react";
 import { SxProps, Theme, Typography, keyframes } from "@mui/material";
 
 interface ScoreNotificationType {

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Box, IconButton, SxProps, Theme } from "@mui/material";
 import {
   BackspaceOutlined,

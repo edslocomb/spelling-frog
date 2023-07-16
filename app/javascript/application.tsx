@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useMemo } from "react";
+import { StrictMode, useMemo } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
@@ -44,12 +43,12 @@ const Root = () => {
   );
 
   return (
-    <React.StrictMode>
+    <StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <RouterProvider router={router} />
       </ThemeProvider>
-    </React.StrictMode>
+    </StrictMode>
   );
 };
 
