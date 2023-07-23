@@ -9,6 +9,10 @@ class Puzzle < ApplicationRecord
   validate :letters_inlude_required_letter, :words_fit_puzzle
 
   class << self
+    def today
+      Puzzle.order(:id).last
+    end
+
     def import!(record, keymap = {letters: "letters", required_letter: "required_letter", words: "words"})
       required_letter = (record[keymap[:required_letter]] || record[keymap[:letters]].first)
       puzzle = new(letters: record[keymap[:letters]].chars.sort.join(""), required_letter: required_letter)

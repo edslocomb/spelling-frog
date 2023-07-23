@@ -8,23 +8,23 @@ import {
   Typography,
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-import GuessedWordList from "./GuessedWordList";
-import WordsFoundText from "./WordsFoundText";
+import FoundWordsList from "./FoundWordsList";
+import FoundWordsSummary from "./FoundWordsSummary";
 import { usesAllLetters } from "./lib";
 
-interface GuessedWordDropdownProps {
+interface FoundWordsDropdownProps {
   words: string[];
   letters: string;
   guessedWordListSx?: SxProps<Theme>;
   sx?: SxProps<Theme>;
 }
 
-export const GuessedWordDropdown = ({
+export const FoundWordsDropdown = ({
   words,
   letters,
   guessedWordListSx,
   sx,
-}: GuessedWordDropdownProps) => {
+}: FoundWordsDropdownProps) => {
   const [expanded, setExpanded] = useState(false);
   const handleChange = () => setExpanded(!expanded);
 
@@ -78,14 +78,14 @@ export const GuessedWordDropdown = ({
       >
         {expanded ? (
           <Typography variant="subtitle2" color="text.secondary">
-            <WordsFoundText numWords={words.length} />
+            <FoundWordsSummary numWords={words.length} />
           </Typography>
         ) : (
           <WordsLine />
         )}
       </AccordionSummary>
       <AccordionDetails sx={{ padding: "0 1em" }}>
-        <GuessedWordList
+        <FoundWordsList
           noHeader
           words={words}
           letters={letters}
@@ -96,4 +96,4 @@ export const GuessedWordDropdown = ({
   );
 };
 
-export default GuessedWordDropdown;
+export default FoundWordsDropdown;

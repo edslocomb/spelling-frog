@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class PuzzlesController < ApplicationController
   def index
     render html: nil, layout: true
@@ -7,18 +5,22 @@ class PuzzlesController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html { render html: nil, layout: true }
+      format.html do
+        if params[:id].match?(/[a-z]{7}/)
+          redirect_to(Puzzle.find_by(
+            required_letter: params[:id].first,
+            letters: params[:id].chars.sort.join
+          ))
+        elsif params[:id].to_i < 0
+          redirect_to(Puzzle.order(id: :desc).limit(-params[:id]).last)
+        elsif params[:id].to_i == 0
+          redirect_to(Puzzle.today)
+        else
+          render html: nil, layout: true
+        end
+      end
       format.json do
-        puzzle =
-          if params[:id].match?(/[a-z]{7}/)
-            Puzzle.find_by(required_letter: params[:id].first, letters: params[:id].chars.sort.join)
-          elsif params[:id].to_i < 0
-            Puzzle.order(id: :desc).limit(-params[:id]).last
-          elsif params[:id].to_i == 0
-            Puzzle.first
-          else
-            Puzzle.find(params[:id])
-          end
+        puzzle = Puzzle.find(params[:id])
         render json: {
           id: puzzle.id,
           letters: puzzle.letters,

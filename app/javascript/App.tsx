@@ -37,7 +37,8 @@ const App = () => (
     </Box>
     <Box
       sx={{
-        minHeight: "80vh",
+        maxHeight: { xs: "90vh", sm: "80vh" },
+        minHeight: { xs: "90vh", sm: "80vh" },
         display: "flex",
       }}
     >

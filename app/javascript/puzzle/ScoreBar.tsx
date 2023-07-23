@@ -14,6 +14,9 @@ import {
   FrogSmiling,
 } from "../icons/";
 
+import { type Puzzle } from "../types";
+import { puzzleScore } from "./lib";
+
 const levels = [0.1, 0.25, 0.4, 0.55, 0.7];
 
 interface ScoreFrogProps extends SvgIconProps {
@@ -28,9 +31,8 @@ const ScoreFrog = ({ level, ...props }: ScoreFrogProps) => {
     return <FrogJumping {...props} />;
   } else if (level >= levels[1]) {
     return <FrogCrouching {...props} />;
-  } else if (level >= levels[0]) {
-    return <Frog {...props} />;
   }
+
   return <Frog {...props} />;
 };
 
@@ -44,12 +46,13 @@ function frogOpacity(frogFraction: number, levelIndex: number) {
 }
 
 interface ScoreBarProps {
-  score: number;
-  maxScore: number;
+  puzzle: Puzzle;
   sx?: SxProps<Theme>;
 }
 
-export const ScoreBar = ({ sx, score, maxScore }: ScoreBarProps) => {
+export const ScoreBar = ({ sx, puzzle }: ScoreBarProps) => {
+  const { maxScore } = puzzle;
+  const score = puzzleScore(puzzle);
   const winningScore = Math.round(maxScore * 0.7);
   const displayedMax = score >= winningScore ? maxScore : winningScore;
   // indulging in a game design reference with this next variable name

@@ -6,25 +6,25 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { WordsFoundText } from "./WordsFoundText";
+import { FoundWordsSummary } from "./FoundWordsSummary";
 import { usesAllLetters } from "./lib";
 
-interface GuessedWordListProps {
+interface FoundWordsListProps {
   noHeader?: boolean;
   words: string[];
   letters: string;
   sx?: SxProps<Theme>;
 }
 
-export const GuessedWordList = ({
+export const FoundWordsList = ({
   words,
   letters,
   noHeader,
   sx,
-}: GuessedWordListProps) => {
+}: FoundWordsListProps) => {
   const subheader = (
     <ListSubheader sx={{ paddingLeft: 0, columnSpan: "all" }}>
-      <WordsFoundText numWords={words.length} />
+      <FoundWordsSummary numWords={words.length} />
     </ListSubheader>
   );
 
@@ -68,4 +68,4 @@ export const GuessedWordList = ({
   );
 };
 
-export default GuessedWordList;
+export default FoundWordsList;

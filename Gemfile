@@ -18,6 +18,7 @@ end
 group :development do
   # gem "spring"
   gem "standard"
+  gem "standard-rails"
   gem "web-console"
 end
 
