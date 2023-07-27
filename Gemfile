@@ -17,7 +17,6 @@ end
 
 group :development do
   gem "spring"
-  gem "spring-commands-standard"
   gem "standard"
   gem "standard-rails"
   gem "web-console"
