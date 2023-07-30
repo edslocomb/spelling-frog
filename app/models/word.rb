@@ -9,19 +9,9 @@ class Word < ApplicationRecord
   after_initialize { |w| w[:letters] = extract_letters(w.name) }
   before_save { |w| w[:letters] = extract_letters(w.name) }
 
-  # Allow shortcut syntax Word.new("frog")
-  def initialize(value)
-    attributes = value.is_a?(String) ? {name: value} : value
-    super(attributes)
-  end
-
   def name=(value)
-    self[:name] = value
     self[:letters] = extract_letters(value)
-  end
-
-  def letters=(value)
-    # set letters only via name=() or callbacks
+    self[:name] = value
   end
 
   def to_s
