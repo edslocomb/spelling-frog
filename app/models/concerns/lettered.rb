@@ -8,15 +8,19 @@ module Lettered
 
   private
 
-  def extract_letters(value)
-    value&.split("")&.sort&.uniq&.join("")
+  def extract_letters(string)
+    string&.chars&.sort&.uniq&.join("")
   end
 
   def letters_are_unique
-    errors.add("letters can't contain the same letter twice") unless letters&.split("")&.uniq&.join("") == letters
+    unless letters&.split("")&.uniq&.join("") == letters
+      errors.add("letters can't contain the same letter twice")
+    end
   end
 
   def letters_are_sorted
-    errors.add("letters must be in alphabetical order") unless letters&.split("")&.sort&.join("") == letters
+    unless letters&.split("")&.sort&.join("") == letters
+      errors.add("letters must be in alphabetical order")
+    end
   end
 end
