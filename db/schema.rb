@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_27_162936) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_154224) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_27_162936) do
     t.string "required_letter", limit: 1
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "published_at"
+    t.index ["published_at"], name: "index_puzzles_on_published_at"
   end
 
   create_table "puzzles_words", force: :cascade do |t|

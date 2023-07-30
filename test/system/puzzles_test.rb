@@ -48,8 +48,8 @@ class PuzzlesTest < ApplicationSystemTestCase
 
   test "guessing words and getting notifications" do
     # add some nonsense words to the Word db (but not as solutions to Puzzle.first)
-    Word.create("gillam")
-    Word.create("gaddy") # 'y' is not in Puzzle.first.letters
+    Word.create(name: "gillam")
+    Word.create(name: "gaddy") # 'y' is not in Puzzle.first.letters
 
     puzzle = Puzzle.first
     visit puzzle_url(id: puzzle.id)

@@ -14,7 +14,7 @@ class PuzzlesController < ApplicationController
         elsif params[:id].to_i < 0
           redirect_to(Puzzle.order(id: :desc).limit(-params[:id]).last)
         elsif params[:id].to_i == 0
-          redirect_to(Puzzle.today)
+          redirect_to(Puzzle.latest)
         else
           render html: nil, layout: true
         end

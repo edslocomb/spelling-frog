@@ -1,68 +1,215 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+admiral:
+  name: "admiral"
+  letters: "adilmr"
 agar:
   name: "agar"
+  letters: "agr"
+airmail:
+  name: "airmail"
+  letters: "ailmr"
+alarm:
+  name: "alarm"
+  letters: "almr"
 alga:
   name: "alga"
+  letters: "agl"
 algid:
   name: "algid"
+  letters: "adgil"
 amalgam:
   name: "amalgam"
+  letters: "aglm"
+amid:
+  name: "amid"
+  letters: "adim"
+arid:
+  name: "arid"
+  letters: "adir"
+armada:
+  name: "armada"
+  letters: "admr"
 diagram:
   name: "diagram"
+  letters: "adgimr"
+dial:
+  name: "dial"
+  letters: "adil"
+dill:
+  name: "dill"
+  letters: "dil"
 drag:
   name: "drag"
+  letters: "adgr"
+dram:
+  name: "dram"
+  letters: "admr"
+drama:
+  name: "drama"
+  letters: "admr"
+drill:
+  name: "drill"
+  letters: "dilr"
 gaga:
   name: "gaga"
+  letters: "ag"
 gala:
   name: "gala"
+  letters: "agl"
 gall:
   name: "gall"
+  letters: "agl"
 gamma:
   name: "gamma"
+  letters: "agm"
 gild:
   name: "gild"
+  letters: "dgil"
 gill:
   name: "gill"
+  letters: "gil"
 gird:
   name: "gird"
+  letters: "dgir"
 girl:
   name: "girl"
+  letters: "gilr"
 glad:
   name: "glad"
+  letters: "adgl"
 glam:
   name: "glam"
+  letters: "aglm"
 glia:
   name: "glia"
+  letters: "agil"
 grad:
   name: "grad"
+  letters: "adgr"
 grail:
   name: "grail"
+  letters: "agilr"
 gram:
   name: "gram"
+  letters: "agmr"
 gramma:
   name: "gramma"
+  letters: "agmr"
 grammar:
   name: "grammar"
+  letters: "agmr"
 grid:
   name: "grid"
+  letters: "dgir"
 grill:
   name: "grill"
+  letters: "gilr"
 grim:
   name: "grim"
+  letters: "gimr"
+iliad:
+  name: "iliad"
+  letters: "adil"
+imam:
+  name: "imam"
+  letters: "aim"
+laid:
+  name: "laid"
+  letters: "adil"
 laggard:
   name: "laggard"
-madrigal:
-  name: "madrigal"
-magi:
-  name: "magi"
-magma:
-  name: "magma"
-milligram:
-  name: "milligram"
-rigid:
-  name: "rigid"
-zebra:
-  name: "zebra"
+  letters: "adglr"
+lama:
+  name: "lama"
+  letters: "alm"
+lard:
+  name: "lard"
+  letters: "adlr"
+lima:
+  name: "lima"
+  letters: "ailm"
 llama:
   name: "llama"
+  letters: "alm"
+madam:
+  name: "madam"
+  letters: "adm"
+madrigal:
+  name: "madrigal"
+  letters: "adgilmr"
+magi:
+  name: "magi"
+  letters: "agim"
+magma:
+  name: "magma"
+  letters: "agm"
+maid:
+  name: "maid"
+  letters: "adim"
+mail:
+  name: "mail"
+  letters: "ailm"
+maim:
+  name: "maim"
+  letters: "aim"
+malaria:
+  name: "malaria"
+  letters: "ailmr"
+malarial:
+  name: "malarial"
+  letters: "ailmr"
+mall:
+  name: "mall"
+  letters: "alm"
+mallard:
+  name: "mallard"
+  letters: "adlmr"
+mama:
+  name: "mama"
+  letters: "am"
+mamma:
+  name: "mamma"
+  letters: "am"
+mammal:
+  name: "mammal"
+  letters: "alm"
+marm:
+  name: "marm"
+  letters: "amr"
+midair:
+  name: "midair"
+  letters: "adimr"
+midi:
+  name: "midi"
+  letters: "dim"
+mild:
+  name: "mild"
+  letters: "dilm"
+mill:
+  name: "mill"
+  letters: "ilm"
+milligram:
+  name: "milligram"
+  letters: "agilmr"
+radar:
+  name: "radar"
+  letters: "adr"
+radial:
+  name: "radial"
+  letters: "adilr"
+radii:
+  name: "radii"
+  letters: "adir"
+raid:
+  name: "raid"
+  letters: "adir"
+ramada:
+  name: "ramada"
+  letters: "admr"
+rigid:
+  name: "rigid"
+  letters: "dgir"
+zebra:
+  name: "zebra"
+  letters: "aberz"
