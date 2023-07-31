@@ -6,11 +6,13 @@ module Lettered
     validate :letters_are_unique, :letters_are_sorted
   end
 
-  private
-
-  def extract_letters(string)
-    string&.chars&.sort&.uniq&.join("")
+  class_methods do
+    def extract_letters(string)
+      string&.chars&.sort&.uniq&.join("")
+    end
   end
+
+  private
 
   def letters_are_unique
     unless letters&.split("")&.uniq&.join("") == letters

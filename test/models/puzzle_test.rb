@@ -45,13 +45,25 @@ class PuzzleTest < ActiveSupport::TestCase
   end
 
   class Import < PuzzleTest
-    test "import puzzles from json" do
-      record = JSON.parse('{"letters":"baekmnt","date":"1970-04-13","words":["abate","abatement","abet","abetment","ameba","amebae","baba","babe","babka","bake","banana","bane","bank","bantam","bate","battement","batten","beak","beam","bean","beat","beaten","been","beet","bent","beta","betake","betaken","embank","embankment","kebab","mamba"]}')
+    setup do
+      @baekmnt_json_string = '{"letters":"baekmnt","date":"1970-04-13","words":["abate","abatement","abet","abetment","ameba","amebae","baba","babe","babka","bake","banana","bane","bank","bantam","bate","battement","batten","beak","beam","bean","beat","beaten","been","beet","bent","beta","betake","betaken","embank","embankment","kebab","mamba"]}'
+    end
+
+    test "import puzzle from json" do
+      record = JSON.parse(@baekmnt_json_string)
       Puzzle.import!(record)
       puzzle = Puzzle.find_by(letters: "abekmnt")
       assert_equal puzzle.required_letter, "b"
       assert_equal puzzle.words.map(&:to_s).sort, record["words"].sort
       assert_equal puzzle.published_at, Time.new(1970, 4, 13)
+    end
+
+    test "import doesn't create dupes" do
+      record = JSON.parse(@baekmnt_json_string)
+      Puzzle.import!(record)
+      assert_equal 1, Puzzle.where(letters: "abekmnt", required_letter: "b").count
+      Puzzle.import!(record)
+      assert_equal 1, Puzzle.where(letters: "abekmnt", required_letter: "b").count
     end
 
     test "import puzzles from json, with keymap" do

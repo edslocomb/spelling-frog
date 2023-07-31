@@ -6,11 +6,11 @@ class Word < ApplicationRecord
 
   validates :name, length: {minimum: 4}, uniqueness: true
 
-  after_initialize { |w| w[:letters] = extract_letters(w.name) }
-  before_save { |w| w[:letters] = extract_letters(w.name) }
+  after_initialize { |w| w[:letters] = self.class.extract_letters(w.name) }
+  before_save { |w| w[:letters] = self.class.extract_letters(w.name) }
 
   def name=(value)
-    self[:letters] = extract_letters(value)
+    self[:letters] = self.class.extract_letters(value)
     self[:name] = value
   end
 

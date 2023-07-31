@@ -1,7 +1,7 @@
 class Puzzle < ApplicationRecord
   include Lettered
 
-  has_many :puzzles_words
+  has_many :puzzles_words, dependent: :destroy
   has_many :words, through: :puzzles_words
 
   validates :letters, length: {is: 7}
@@ -38,15 +38,29 @@ class Puzzle < ApplicationRecord
       words: "words",
       date: "date"
     })
-
       required_letter = (record[keymap[:required_letter]] || record[keymap[:letters]].first)
-      puzzle = new(
-        letters: record[keymap[:letters]].chars.sort.join(""),
-        required_letter: required_letter,
-        published_at: record[keymap[:date]]
-      )
-      puzzle.words = record[keymap[:words]].map { |w| Word.find_or_initialize_by(name: w) }
-      puzzle.save!
+      letters = record[keymap[:letters]].chars.sort.join("")
+      return if Puzzle.find_by(required_letter: required_letter, letters: letters)
+
+      existing_words = Word.where(name: record[keymap[:words]])
+      new_word_names = record[keymap[:words]] - existing_words.map(&:name)
+      Puzzle.transaction do
+        new_word_ids = if new_word_names.empty?
+          []
+        else
+          Word.insert_all!(new_word_names.map { |w| {name: w, letters: extract_letters(w)} })
+            .pluck("id")
+        end
+        new_puzzle = Puzzle.create(
+          letters: letters,
+          required_letter: required_letter,
+          published_at: record[keymap[:date]]
+        )
+        PuzzlesWord.insert_all!(
+          (new_word_ids + existing_words.map(&:id))
+            .map { |word_id| {word_id: word_id, puzzle_id: new_puzzle.id} }
+        )
+      end
     end
   end
 
