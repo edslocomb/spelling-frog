@@ -10,6 +10,7 @@ import {
   ThemeOptions,
 } from "@mui/material/styles";
 import { assign } from "radash";
+import green from "@mui/material/colors/green";
 import lightGreen from "@mui/material/colors/lightGreen";
 
 import "@fontsource/roboto/latin-300.css";
@@ -19,9 +20,10 @@ import "@fontsource/roboto/latin-700.css";
 
 const themeCustomizations = {
   palette: {
-    primary: lightGreen,
-    secondary: lightGreen,
-    mode: undefined,
+    primary: {
+      main: green[700],
+    },
+    secondary: { main: lightGreen["A400"] },
   },
   typography: {
     fontSize: 14,

@@ -1,22 +1,25 @@
 import { Outlet } from "react-router-dom";
 import { Container, Box, Typography } from "@mui/material";
+import Navbar from "./navbar";
 import { FrogDoodle } from "./icons/";
 
 const App = () => (
   <Container
     sx={{
       minHeight: "100vh",
-      maxHeight: { xs: "auto", sm: "100vh" },
-      flexDirection: "column",
+      maxHeight: "100vh",
       display: "flex",
+      flexDirection: "column",
+      overflow: "hidden",
     }}
   >
+    <Navbar />
     <Box
       sx={{
-        display: "flex",
-        maxHeight: { xs: "10vh", sm: "20vh" },
-        minHeight: { xs: "10vh", sm: "20vh" },
-        justifyContent: { xs: "left", sm: "center" },
+        display: { xs: "none", sm: "flex" },
+        maxHeight: "calc(20vh - 64px)",
+        minHeight: "calc(20vh - 64px)",
+        justifyContent: { sm: "center" },
       }}
     >
       <Typography
@@ -37,8 +40,9 @@ const App = () => (
     </Box>
     <Box
       sx={{
-        maxHeight: { xs: "90vh", sm: "80vh" },
-        minHeight: { xs: "90vh", sm: "80vh" },
+        maxHeight: { xs: "calc(100vh - 56px)", sm: "80vh" },
+        minHeight: { xs: "calc(100vh - 56px)", sm: "80vh" },
+        paddingTop: { xs: "2rem", sm: 0 },
         display: "flex",
       }}
     >

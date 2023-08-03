@@ -64,14 +64,13 @@ export const ScoreBar = ({ sx, puzzle }: ScoreBarProps) => {
       sx={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
         ...sx,
       }}
     >
       <Box
         sx={{
           flexGrow: 1,
-          marginRight: "5px",
+          marginRight: "1ch",
           height: "100%",
           position: "relative",
         }}
@@ -108,12 +107,11 @@ export const ScoreBar = ({ sx, puzzle }: ScoreBarProps) => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          alignContent: "center",
+          alignItems: "center",
           minWidth: "4ch",
           height: "4ch",
           bgcolor: "secondary.main",
           borderRadius: "5px",
-          padding: "0.5ch",
         }}
       >
         <Typography variant="button" color="black" component="div">

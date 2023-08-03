@@ -72,7 +72,7 @@ export const FoundWordsDropdown = ({
         sx={{
           padding: "0 5px 0 10px",
           "& .MuiAccordionSummary-content": {
-            overflow: "hidden",
+            overflowX: "hidden",
           },
         }}
       >

@@ -22,38 +22,34 @@ const Puzzle = () => {
           display: "flex",
           flexDirection: "column",
           alignContent: "center",
-          justifyContent: "center",
           minWidth: { xs: "100%", sm: "50%" },
         }}
       >
-        <Box
+        <ScoreBar
+          puzzle={puzzle}
           sx={{
-            flexDirection: "column",
             display: { xs: "flex", sm: "none" },
+            minHeight: "6ch",
           }}
-        >
-          <ScoreBar
-            puzzle={puzzle}
-            sx={{
-              height: "5ch",
-              paddingBottom: "5px",
-            }}
-          />
-          <FoundWordsDropdown
-            words={foundWords}
-            letters={letters}
-            sx={{ width: "calc(100vw - 32px)", maxHeight: "80vh" }}
-            guessedWordListSx={{ height: "72vh" }}
-          />
-        </Box>
+        />
+        <FoundWordsDropdown
+          words={foundWords}
+          letters={letters}
+          sx={{
+            display: { sm: "none" },
+            width: "calc(100vw - 32px)",
+            maxHeight: "calc(100vh - 60px - 6ch - 5rem)",
+          }}
+          guessedWordListSx={{
+            height: "calc(100vh - 60px - 6ch - 48px - 5rem)",
+          }}
+        />
         <GameBoard
           actions={actions}
           puzzle={puzzle}
           sx={{
-            display: "flex",
             flexDirection: "column",
             flexGrow: 1,
-            justifyContent: "flex-start",
           }}
         />
       </Box>
