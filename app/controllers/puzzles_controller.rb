@@ -26,7 +26,8 @@ class PuzzlesController < ApplicationController
           letters: puzzle.letters,
           requiredLetter: puzzle.required_letter,
           words: puzzle.words.map(&:name),
-          maxScore: puzzle.score
+          maxScore: puzzle.score,
+          published: puzzle.published_at.to_i
         }
       end
     end

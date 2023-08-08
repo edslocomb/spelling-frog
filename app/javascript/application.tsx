@@ -27,7 +27,7 @@ const themeCustomizations = {
   },
   typography: {
     fontSize: 14,
-    h1: { fontSize: "2.2rem" },
+    h1: { fontSize: "2.2rem", fontWeight: 500 },
     h2: { fontSize: "1.8rem" },
     h3: { fontSize: "1.6rem" },
     h4: { fontSize: "1.3rem" },

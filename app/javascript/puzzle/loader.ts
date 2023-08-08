@@ -8,11 +8,12 @@ import { emptyPuzzleState, type PuzzleDefinition } from "../types";
 async function fetchPuzzle(id: string): Promise<PuzzleDefinition> {
   const response = await fetch(`/puzzles/${id}.json`);
   const json = await response.json();
+  json.published = json.published * 1000;
   return json;
 }
 
 interface LoaderParams {
-  params: Params<"puzzleId">;
+  params: Params<"puzzleId" | "foo">;
 }
 
 export async function loader({ params }: LoaderParams) {

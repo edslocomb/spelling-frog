@@ -26,7 +26,8 @@ export type Store = Puzzles & PuzzleActionSlice;
 export const currentPuzzle = (state: Store) =>
   state.puzzles[state.currentPuzzleId];
 
-const createPuzzleActionsSlice: StoreSlice<PuzzleActionSlice> = (set) => ({
+const createPuzzleActionsSlice: StoreSlice<PuzzleActionSlice> = (set, get) => ({
+  currentPuzzle: () => currentPuzzle(get()),
   actions: {
     addFoundWord: (word) =>
       set((state) => {

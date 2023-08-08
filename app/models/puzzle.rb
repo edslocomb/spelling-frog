@@ -44,6 +44,7 @@ class Puzzle < ApplicationRecord
 
       existing_words = Word.where(name: record[keymap[:words]])
       new_word_names = record[keymap[:words]] - existing_words.map(&:name)
+
       Puzzle.transaction do
         new_word_ids = if new_word_names.empty?
           []
