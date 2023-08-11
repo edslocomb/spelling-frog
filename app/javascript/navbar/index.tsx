@@ -5,7 +5,7 @@ import FrogDoodle from "../icons/FrogDoodle";
 
 const Navbar = () => {
   const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
-  const puzzle = useStore().currentPuzzle();
+  const puzzle = useStore((state) => state.currentPuzzle());
 
   return (
     <>

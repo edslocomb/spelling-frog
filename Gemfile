@@ -1,4 +1,5 @@
 source "https://rubygems.org"
+source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.2.2"
@@ -24,5 +25,5 @@ end
 
 group :test do
   gem "capybara"
-  gem "selenium-webdriver"
+  gem "selenium-webdriver", "~> 4.10.0"
 end

@@ -13,7 +13,7 @@ async function fetchPuzzle(id: string): Promise<PuzzleDefinition> {
 }
 
 interface LoaderParams {
-  params: Params<"puzzleId" | "foo">;
+  params: Params<"puzzleId">;
 }
 
 export async function loader({ params }: LoaderParams) {

@@ -20,7 +20,7 @@ class PuzzlesTest < ApplicationSystemTestCase
     end
     # word is displayed as guess
     assert_text first_word.to_s.upcase
-    assert_selector("span", text: puzzle.required_letter.upcase, style: {color: "rgb(139, 195, 74)"})
+    assert_selector("span", text: puzzle.required_letter.upcase, style: {color: "rgb(56, 142, 60)"})
     click_button "enter"
     # score notification appears
     assert_text "#{first_word.to_s.capitalize} +#{first_word.score}"
@@ -57,7 +57,7 @@ class PuzzlesTest < ApplicationSystemTestCase
     send_keys "gillam"
     assert_text "GILLAM"
     # 'G' should render in green
-    assert_selector("span", text: "G", style: {color: "rgb(139, 195, 74)"})
+    assert_selector("span", text: "G", style: {color: "rgb(56, 142, 60)"})
     # 'ILLAM' should render in default text color
     assert_selector("span", text: "G", style: {color: "rgba(0, 0, 0, 0.87)"})
     send_keys :return

@@ -12,7 +12,10 @@ export type StoreSlice<T> = StateCreator<
   T
 >;
 
-const createPuzzlesSlice: StoreSlice<Puzzles> = () => ({
+const currentPuzzle = (state: Store) => state.puzzles[state.currentPuzzleId];
+
+const createPuzzlesSlice: StoreSlice<Puzzles> = (_set, get) => ({
+  currentPuzzle: () => currentPuzzle(get()),
   currentPuzzleId: 0,
   puzzles: {},
 });
@@ -23,11 +26,7 @@ interface PuzzleActionSlice {
 
 export type Store = Puzzles & PuzzleActionSlice;
 
-export const currentPuzzle = (state: Store) =>
-  state.puzzles[state.currentPuzzleId];
-
-const createPuzzleActionsSlice: StoreSlice<PuzzleActionSlice> = (set, get) => ({
-  currentPuzzle: () => currentPuzzle(get()),
+const createPuzzleActionsSlice: StoreSlice<PuzzleActionSlice> = (set) => ({
   actions: {
     addFoundWord: (word) =>
       set((state) => {

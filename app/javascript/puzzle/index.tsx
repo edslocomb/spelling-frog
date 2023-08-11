@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useLoaderData } from "react-router-dom";
 
-import { useStore, currentPuzzle } from "../store";
+import { useStore } from "../store";
 import FoundWordsList from "./FoundWordsList";
 import FoundWordsDropdown from "./FoundWordsDropdown";
 import ScoreBar from "./ScoreBar";
@@ -11,7 +11,7 @@ import { Puzzle } from "../types";
 const Puzzle = () => {
   useLoaderData();
 
-  const puzzle = useStore((state) => currentPuzzle(state));
+  const puzzle = useStore((state) => state.currentPuzzle());
   const { letters, foundWords } = puzzle;
   const actions = useStore((state) => state.actions);
 
