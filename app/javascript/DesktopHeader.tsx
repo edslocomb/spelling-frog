@@ -59,7 +59,7 @@ const DesktopHeader = ({ sx }: DesktopHeaderProps) => {
               <ArrowLeft color="primary" />
             </IconButton>
             <Typography align="center" variant="h6" color="primary">
-              {new Date(+puzzle.published).toLocaleDateString()}
+              {new Date(puzzle.published).toLocaleDateString()}
             </Typography>
             <IconButton
               size="small"

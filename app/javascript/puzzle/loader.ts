@@ -8,7 +8,7 @@ import { emptyPuzzleState, type PuzzleDefinition } from "../types";
 async function fetchPuzzle(id: string): Promise<PuzzleDefinition> {
   const response = await fetch(`/puzzles/${id}.json`);
   const json = await response.json();
-  json.published = json.published * 1000;
+  json.published = +json.published * 1000;
   return json;
 }
 

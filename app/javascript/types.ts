@@ -14,7 +14,7 @@ export interface PuzzleDefinition {
   requiredLetter: string;
   maxScore: number;
   words: string[];
-  published: Date;
+  published: number;
 }
 
 export const emptyPuzzleDefinition = {
