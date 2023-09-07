@@ -6,21 +6,13 @@ class PuzzlesController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        if params[:id].match?(/[a-z]{7}/)
-          redirect_to(Puzzle.find_by(
-            required_letter: params[:id].first,
-            letters: params[:id].chars.sort.join
-          ))
-        elsif params[:id].to_i < 0
-          redirect_to(Puzzle.order(id: :desc).limit(-params[:id]).last)
-        elsif params[:id].to_i == 0
-          redirect_to(Puzzle.latest)
-        else
-          render html: nil, layout: true
-        end
+        puzzle = Puzzle.for_id(params[:id])
+        return redirect_to(puzzle) if puzzle && puzzle.id != params[:id].to_i
+        render html: nil, layout: true
       end
       format.json do
-        puzzle = Puzzle.find(params[:id])
+        puzzle = Puzzle.for_id(params[:id])
+        return render json: {error: "Not found", id: params[:id]} unless puzzle
         render json: {
           id: puzzle.id,
           letters: puzzle.letters,

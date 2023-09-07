@@ -27,7 +27,7 @@ export async function loader({ params }: LoaderParams) {
     const puzzleDefinition = await fetchPuzzle(puzzleId);
     useStore.setState(
       assign(currentState, {
-        currentPuzzleId: +puzzleId,
+        currentPuzzleId: puzzleDefinition.id,
         puzzles: {
           [puzzleDefinition.id]: {
             ...emptyPuzzleState,
@@ -38,5 +38,6 @@ export async function loader({ params }: LoaderParams) {
       } as Partial<Store>),
     );
   }
-  return useStore.getState().puzzles[useStore.getState().currentPuzzleId];
+  const state = useStore.getState();
+  return state.puzzles[state.currentPuzzleId];
 }

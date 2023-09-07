@@ -32,6 +32,22 @@ class Puzzle < ApplicationRecord
       published.order(published_at: :desc).first
     end
 
+    def for_id(puzzle_id)
+      if puzzle_id.match?(/[a-z]{7}/)
+        return Puzzle.find_by(required_letter: puzzle_id.first,
+          letters: puzzle_id.chars.sort.join)
+      end
+
+      id = puzzle_id.to_i
+      if id > 0
+        Puzzle.find(id)
+      elsif id == 0
+        latest
+      else
+        Puzzle.order(id: :desc).limit(-id).last
+      end
+    end
+
     def import!(record, keymap = {
       letters: "letters",
       required_letter: "required_letter",
