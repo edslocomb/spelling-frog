@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import NavigateBefore from "@mui/icons-material/NavigateBefore";
 import Forward from "@mui/icons-material/Forward";
+import Today from "@mui/icons-material/Today";
 import { useNavigate } from "react-router-dom";
 
 import { useStore } from "./store";
@@ -48,6 +49,14 @@ const MainMenu = ({ open, toggleOpen }: MainMenuProps) => {
       <Divider />
       <List>
         {puzzle.id > 1 ? (
+          <ListItem onClick={navigatePrevPuzzle} sx={{ cursor: "pointer" }}>
+            <ListItemIcon>
+              <Forward sx={{ transform: "scaleX(-1)" }} />
+            </ListItemIcon>
+            <ListItemText>{prevPuzzleDate.toLocaleDateString()}</ListItemText>
+          </ListItem>
+        ) : null}
+        {now - puzzleDate.getTime() >= oneDay * 2 ? (
           <ListItem onClick={navigateNextPuzzle} sx={{ cursor: "pointer" }}>
             <ListItemIcon>
               <Forward />
@@ -56,15 +65,10 @@ const MainMenu = ({ open, toggleOpen }: MainMenuProps) => {
           </ListItem>
         ) : null}
         {now - puzzleDate.getTime() >= oneDay ? (
-          <ListItem onClick={navigatePrevPuzzle} sx={{ cursor: "pointer" }}>
-            <ListItemIcon>
-              <Forward sx={{ transform: "scaleX(-1)" }} />
-            </ListItemIcon>
-            <ListItemText>{prevPuzzleDate.toLocaleDateString()}</ListItemText>
-          </ListItem>
-        ) : null}
-        {now - puzzleDate.getTime() >= oneDay ? (
           <ListItem onClick={navigateLatest} sx={{ cursor: "pointer" }}>
+            <ListItemIcon>
+              <Today />
+            </ListItemIcon>
             <ListItemText>Today</ListItemText>
           </ListItem>
         ) : null}
