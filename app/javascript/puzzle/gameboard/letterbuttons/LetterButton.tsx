@@ -18,6 +18,7 @@ export const LetterButton = ({
 
   return (
     <Button
+      centerRipple
       disableElevation
       variant={variant}
       color={color}

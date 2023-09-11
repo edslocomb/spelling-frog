@@ -1,8 +1,9 @@
 import {
   Divider,
   Drawer,
+  IconButton,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Toolbar,
@@ -42,35 +43,42 @@ const MainMenu = ({ open, toggleOpen }: MainMenuProps) => {
   };
 
   return (
-    <Drawer variant="temporary" open={open} onClose={toggleOpen}>
+    <Drawer
+      variant="temporary"
+      open={open}
+      onClose={toggleOpen}
+      disableRestoreFocus
+    >
       <Toolbar onClick={toggleOpen} sx={{ justifyContent: "flex-start" }}>
-        <NavigateBefore fontSize="large" />
+        <IconButton onClick={toggleOpen} edge="start">
+          <NavigateBefore fontSize="large" />
+        </IconButton>
       </Toolbar>
       <Divider />
       <List>
         {puzzle.id > 1 ? (
-          <ListItem onClick={navigatePrevPuzzle} sx={{ cursor: "pointer" }}>
+          <ListItemButton onClick={navigatePrevPuzzle}>
             <ListItemIcon>
               <Forward sx={{ transform: "scaleX(-1)" }} />
             </ListItemIcon>
             <ListItemText>{prevPuzzleDate.toLocaleDateString()}</ListItemText>
-          </ListItem>
+          </ListItemButton>
         ) : null}
         {now - puzzleDate.getTime() >= oneDay * 2 ? (
-          <ListItem onClick={navigateNextPuzzle} sx={{ cursor: "pointer" }}>
+          <ListItemButton onClick={navigateNextPuzzle}>
             <ListItemIcon>
               <Forward />
             </ListItemIcon>
             <ListItemText>{nextPuzzleDate.toLocaleDateString()}</ListItemText>
-          </ListItem>
+          </ListItemButton>
         ) : null}
         {now - puzzleDate.getTime() >= oneDay ? (
-          <ListItem onClick={navigateLatest} sx={{ cursor: "pointer" }}>
+          <ListItemButton onClick={navigateLatest}>
             <ListItemIcon>
               <Today />
             </ListItemIcon>
             <ListItemText>Today</ListItemText>
-          </ListItem>
+          </ListItemButton>
         ) : null}
       </List>
     </Drawer>
