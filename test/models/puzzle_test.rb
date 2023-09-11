@@ -105,9 +105,9 @@ class PuzzleTest < ActiveSupport::TestCase
     end
 
     test "scopes based on publication date" do
-      assert_equal [@published_puzzle], Puzzle.published.to_a
-      assert_equal [@scheduled_puzzle], Puzzle.scheduled.to_a
-      assert_equal [@draft_puzzle], Puzzle.draft.to_a
+      assert_equal Set.new([puzzles(:gadilmr), puzzles(:old)]), Puzzle.published.to_set
+      assert_equal Set.new([@scheduled_puzzle, puzzles(:future)]), Puzzle.scheduled.to_set
+      assert_equal Set.new([@draft_puzzle, puzzles(:unpublished)]), Puzzle.draft.to_set
       assert_equal @published_puzzle, Puzzle.latest
     end
   end

@@ -7,7 +7,7 @@ class PuzzlesController < ApplicationController
     respond_to do |format|
       format.html do
         puzzle = Puzzle.for_id(params[:id])
-        return redirect_to(puzzle) if puzzle && puzzle.id != params[:id].to_i
+        return redirect_to(puzzle) if puzzle&.id != params[:id].to_i
         render html: nil, layout: true
       end
       format.json do

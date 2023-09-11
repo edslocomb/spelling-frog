@@ -3,3 +3,19 @@
 gadilmr:
   letters: "adgilmr"
   required_letter: "g"
+  published_at: Date.parse("2023-01-01")
+
+unpublished:
+  letters: "adgilmr"
+  required_letter: "a"
+  published_at: nil
+
+future:
+  letters: "adgilmr"
+  required_letter: "i"
+  published_at: "3023-01-01"
+
+old:
+  letters: "adgilmr"
+  required_letter: "r"
+  published_at: "2002-01-01"

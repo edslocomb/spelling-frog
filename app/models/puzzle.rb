@@ -44,7 +44,7 @@ class Puzzle < ApplicationRecord
       elsif id == 0
         latest
       else
-        Puzzle.order(id: :desc).limit(-id).last
+        Puzzle.order(id: :desc).limit(-id + 1).last
       end
     end
 
