@@ -2,7 +2,7 @@ require "application_system_test_case"
 
 class PuzzlesTest < ApplicationSystemTestCase
   test "solve a puzzle" do
-    puzzle = Puzzle.first
+    puzzle = puzzles(:gadilmr)
     # sanity check-- don't want to solve an empty puzzle
     assert_equal "adgilmr", puzzle.letters
     assert_equal 31, puzzle.words.count
@@ -51,7 +51,7 @@ class PuzzlesTest < ApplicationSystemTestCase
     Word.create(name: "gillam")
     Word.create(name: "gaddy") # 'y' is not in Puzzle.first.letters
 
-    puzzle = Puzzle.first
+    puzzle = puzzles(:gadilmr)
     visit puzzle_url(id: puzzle.id)
 
     send_keys "gillam"
