@@ -32,20 +32,40 @@ class Puzzle < ApplicationRecord
       published.order(published_at: :desc).first
     end
 
-    def for_id(puzzle_id)
-      if puzzle_id.match?(/[a-z]{7}/)
-        return Puzzle.find_by(required_letter: puzzle_id.first,
-          letters: puzzle_id.chars.sort.join)
-      end
+    def for_letters(letters)
+      published.find_by(required_letter: letters.first,
+        letters: letters.chars.sort.join)
+    end
 
-      id = puzzle_id.to_i
-      if id > 0
-        Puzzle.find(id)
-      elsif id == 0
+    def for(query)
+      if query.match?(/^[a-z]{7}$/)
+        for_letters(query)
+      elsif query.match?(/^-?\d+$/)
+        for_number(query.to_i)
+      elsif query =~ /^(\d+)([-+]\d+)$/
+        for_offset($1, $2)
+      end
+    end
+
+    def for_number(num)
+      if num > 0
+        published.find_by(id: num)
+      elsif num == 0
         latest
       else
-        published.order(published_at: :desc).limit(-id + 1).last
+        published.order(published_at: :desc).limit(-num + 1).last
       end
+    end
+
+    def for_offset(id, offset)
+      dir = offset.first
+      puzzle = find(id)
+      range = ((dir == "-") ? ..puzzle.published_at : puzzle.published_at..)
+      published
+        .where(published_at: range)
+        .order(published_at: (dir == "-") ? :desc : :asc)
+        .limit(offset.slice(1..).to_i + 1)
+        .last
     end
 
     def import!(record, keymap = {

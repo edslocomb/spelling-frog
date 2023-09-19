@@ -6,13 +6,14 @@ class PuzzlesController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        puzzle = Puzzle.for_id(params[:id])
+        puzzle = Puzzle.for(params[:id])
         return redirect_to(puzzle) if puzzle&.id != params[:id].to_i
         render html: nil, layout: true
       end
       format.json do
-        puzzle = Puzzle.for_id(params[:id])
+        puzzle = Puzzle.for(params[:id])
         return render json: {error: "Not found", id: params[:id]} unless puzzle
+        return redirect_to(puzzle_url(puzzle, format: :json)) if params[:id] == "0"
         render json: {
           id: puzzle.id,
           letters: puzzle.letters,

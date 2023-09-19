@@ -1,13 +1,13 @@
 require "application_system_test_case"
 
-class PuzzlesTest < ApplicationSystemTestCase
+class PuzzlesSystemTest < ApplicationSystemTestCase
   test "solve a puzzle" do
     puzzle = puzzles(:gadilmr)
     # sanity check-- don't want to solve an empty puzzle
     assert_equal "adgilmr", puzzle.letters
     assert_equal 31, puzzle.words.count
 
-    visit puzzle_url(id: puzzle.id)
+    visit puzzle_url(puzzle)
     assert_text "Spelling Frog"
 
     # randomize word order for solve
@@ -52,7 +52,7 @@ class PuzzlesTest < ApplicationSystemTestCase
     Word.create(name: "gaddy") # 'y' is not in Puzzle.first.letters
 
     puzzle = puzzles(:gadilmr)
-    visit puzzle_url(id: puzzle.id)
+    visit puzzle_url(puzzle)
 
     send_keys "gillam"
     assert_text "GILLAM"
@@ -93,5 +93,83 @@ class PuzzlesTest < ApplicationSystemTestCase
     send_keys :return
     assert_text "Too Short"
     assert_no_text "Too Short" # notification expires
+  end
+
+  test "progress preserved after navigating to other puzzles" do
+    puzzle = puzzles(:gadilmr)
+    old_puzzle = puzzles(:old)
+    latest_puzzle = Puzzle.create(letters: "adgilmr", required_letter: "m", published_at: 1.hour.ago)
+    yesterday_puzzle = Puzzle.create(letters: "adgilmr", required_letter: "l", published_at: 25.hours.ago)
+
+    [old_puzzle, latest_puzzle, yesterday_puzzle].each do |p|
+      p.words = p.possible_solutions
+      p.save!
+    end
+    assert_equal latest_puzzle, Puzzle.latest
+
+    visit puzzle_url(puzzle)
+    assert_text puzzle.published_at.strftime("%-m/%-d/%Y")
+    puzzle_word = "grad"
+
+    send_keys puzzle_word
+    send_keys :return
+    assert_text puzzle_word.capitalize
+
+    # navigate via browser urls
+    visit puzzle_url(old_puzzle)
+    assert_text old_puzzle.published_at.strftime("%-m/%-d/%Y")
+    assert_no_text puzzle_word.capitalize
+
+    old_word = "raid"
+    send_keys old_word
+    send_keys :return
+    assert_text old_word.capitalize
+
+    visit puzzle_url(puzzle)
+    assert_text puzzle.published_at.strftime("%-m/%-d/%Y")
+    assert_text puzzle_word.capitalize
+    assert_no_text old_word.capitalize
+
+    # navigate via front-end router links
+    click_button "Open Main Menu"
+    click_on "Previous Puzzle"
+    assert_text old_puzzle.published_at.strftime("%-m/%-d/%Y")
+    assert_text old_word.capitalize
+    assert_no_text puzzle_word.capitalize
+
+    click_button "Open Main Menu"
+    click_on "Next Puzzle"
+    assert_text puzzle.published_at.strftime("%-m/%-d/%Y")
+    assert_text puzzle_word.capitalize
+    assert_no_text old_word.capitalize
+
+    click_button "Open Main Menu"
+    click_on "Next Puzzle"
+    assert_text yesterday_puzzle.published_at.strftime("%-m/%-d/%Y")
+    assert_no_text puzzle_word.capitalize
+    assert_no_text old_word.capitalize
+
+    click_button "Open Main Menu"
+    assert_no_text "Next Puzzle"
+    click_on "Latest Puzzle"
+    assert_text latest_puzzle.published_at.strftime("%-m/%-d/%Y")
+
+    latest_word = "mall"
+    send_keys latest_word
+    send_keys :return
+    assert_text latest_word.capitalize
+
+    click_button "Open Main Menu"
+    click_on "Previous Puzzle"
+    click_button "Open Main Menu"
+    click_on "Previous Puzzle"
+    assert_text puzzle.published_at.strftime("%-m/%-d/%Y")
+    assert_text puzzle_word.capitalize
+
+    click_button "Open Main Menu"
+    assert_text "Next Puzzle"
+    click_on "Latest Puzzle"
+    assert_text latest_puzzle.published_at.strftime("%-m/%-d/%Y")
+    assert_text latest_word.capitalize
   end
 end

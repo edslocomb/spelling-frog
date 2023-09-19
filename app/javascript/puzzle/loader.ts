@@ -19,7 +19,7 @@ interface LoaderParams {
 export async function loader({ params }: LoaderParams) {
   const paramsId = params.puzzleId || "0";
   const currentState = useStore.getState();
-  if (paramsId != "0" && currentState.puzzles[paramsId]) {
+  if (+paramsId > 0 && currentState.puzzles[paramsId]) {
     // TODO: update user's puzzle state here if logged in
     useStore.setState(
       assign(currentState, { currentPuzzleId: +paramsId } as Partial<Store>),

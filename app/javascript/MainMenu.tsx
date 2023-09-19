@@ -11,7 +11,7 @@ import {
 import NavigateBefore from "@mui/icons-material/NavigateBefore";
 import Forward from "@mui/icons-material/Forward";
 import Today from "@mui/icons-material/Today";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useStore } from "./store";
 
@@ -23,24 +23,9 @@ interface MainMenuProps {
 }
 
 const MainMenu = ({ open, toggleOpen }: MainMenuProps) => {
-  const navigate = useNavigate();
   const puzzle = useStore((state) => state.currentPuzzle());
   const now = Date.now();
   const puzzleDate = new Date(puzzle.published);
-  const prevPuzzleDate = new Date(puzzle.published - oneDay);
-  const nextPuzzleDate = new Date(puzzle.published + oneDay);
-  const navigatePrevPuzzle = () => {
-    navigate(`/puzzles/${puzzle.id - 1}`);
-    toggleOpen();
-  };
-  const navigateNextPuzzle = () => {
-    navigate(`/puzzles/${puzzle.id + 1}`);
-    toggleOpen();
-  };
-  const navigateLatest = () => {
-    navigate("puzzles/0");
-    toggleOpen();
-  };
 
   return (
     <Drawer
@@ -50,34 +35,49 @@ const MainMenu = ({ open, toggleOpen }: MainMenuProps) => {
       disableRestoreFocus
     >
       <Toolbar onClick={toggleOpen} sx={{ justifyContent: "flex-start" }}>
-        <IconButton onClick={toggleOpen} edge="start">
+        <IconButton onClick={toggleOpen} edge="start" aria-label="Close Menu">
           <NavigateBefore fontSize="large" />
         </IconButton>
       </Toolbar>
       <Divider />
       <List>
         {puzzle.id > 1 ? (
-          <ListItemButton onClick={navigatePrevPuzzle}>
+          <ListItemButton
+            component={Link}
+            to={`/puzzles/${puzzle.id}-1`}
+            onClick={toggleOpen}
+            aria-label="Previous Puzzle"
+          >
             <ListItemIcon>
               <Forward sx={{ transform: "scaleX(-1)" }} />
             </ListItemIcon>
-            <ListItemText>{prevPuzzleDate.toLocaleDateString()}</ListItemText>
+            <ListItemText>Previous Puzzle</ListItemText>
           </ListItemButton>
         ) : null}
         {now - puzzleDate.getTime() >= oneDay * 2 ? (
-          <ListItemButton onClick={navigateNextPuzzle}>
+          <ListItemButton
+            component={Link}
+            to={`/puzzles/${puzzle.id}+1`}
+            onClick={toggleOpen}
+            aria-label="Next Puzzle"
+          >
             <ListItemIcon>
               <Forward />
             </ListItemIcon>
-            <ListItemText>{nextPuzzleDate.toLocaleDateString()}</ListItemText>
+            <ListItemText>Next Puzzle</ListItemText>
           </ListItemButton>
         ) : null}
         {now - puzzleDate.getTime() >= oneDay ? (
-          <ListItemButton onClick={navigateLatest}>
+          <ListItemButton
+            component={Link}
+            to="/puzzles/0"
+            onClick={toggleOpen}
+            aria-label="Latest Puzzle"
+          >
             <ListItemIcon>
               <Today />
             </ListItemIcon>
-            <ListItemText>Today</ListItemText>
+            <ListItemText>Latest Puzzle</ListItemText>
           </ListItemButton>
         ) : null}
       </List>

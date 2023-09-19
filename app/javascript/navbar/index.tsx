@@ -27,6 +27,7 @@ const Navbar = ({ toggleMenu }: NavbarProps) => {
             color="inherit"
             size="large"
             onClick={toggleMenu}
+            aria-label="Open Main Menu"
           >
             <MenuIcon />
           </IconButton>
