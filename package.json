@@ -4,8 +4,8 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
-    "@mui/icons-material": "^5.14.6",
-    "@mui/material": "^5.14.6",
+    "@mui/icons-material": "^5.14.9",
+    "@mui/material": "^5.14.10",
     "@types/react-router": "^5.1.20",
     "esbuild": "^0.19.2",
     "immer": "^10.0.2",
@@ -13,21 +13,21 @@
     "radash": "^11.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0",
-    "typescript": "5.1",
+    "react-router-dom": "^6.16.0",
+    "typescript": "5.2.2",
     "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@types/es6-promise": "^3.3.0",
-    "@types/react": "^18.2.21",
+    "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.4.1",
-    "@typescript-eslint/parser": "^6.4.1",
-    "@yarnpkg/sdks": "^3.0.0-rc.50",
-    "eslint": "^8.48.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "@yarnpkg/sdks": "^3.0.0-rc.51",
+    "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-react": "^7.33.2",
-    "prettier": "^3.0.2"
+    "prettier": "^3.0.3"
   },
   "eslintConfig": {
     "plugins": [
@@ -56,5 +56,6 @@
   "scripts": {
     "build": "esbuild app/javascript/*.* --bundle --minify --outdir=app/assets/builds --public-path=assets --loader:.woff=dataurl --loader:.woff2=dataurl",
     "build-dev": "esbuild app/javascript/*.* --bundle --watch --sourcemap --outdir=app/assets/builds --public-path=assets --loader:.woff=dataurl --loader:.woff2=dataurl"
-  }
+  },
+  "packageManager": "yarn@3.6.3"
 }

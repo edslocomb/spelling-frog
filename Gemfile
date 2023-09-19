@@ -2,11 +2,11 @@ source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.2.2"
-gem "rails", "7.0.7.2"
+gem "rails", "7.0.8"
 
 gem "devise"
 gem "jsbundling-rails"
-gem "pg", "~> 1.1"
+gem "pg", "~> 1.5"
 gem "propshaft"
 gem "puma", ">= 5.0"
 
@@ -24,5 +24,5 @@ end
 
 group :test do
   gem "capybara"
-  gem "selenium-webdriver", "~> 4.10.0"
+  gem "selenium-webdriver"
 end
