@@ -10,7 +10,7 @@ interface NavbarProps {
 
 const Navbar = ({ toggleMenu }: NavbarProps) => {
   const puzzle = useStore((state) => state.currentPuzzle());
-  const puzzleDate = new Date(puzzle.published);
+  const puzzleDate = puzzle ? new Date(puzzle.published) : undefined;
 
   return (
     <AppBar position="fixed" enableColorOnDark>
@@ -45,7 +45,7 @@ const Navbar = ({ toggleMenu }: NavbarProps) => {
             <Typography variant="h3">Spelling Frog </Typography>
           </Box>
           <Typography variant="button">
-            {puzzleDate.toLocaleDateString()}
+            {puzzleDate?.toLocaleDateString()}
           </Typography>
         </Box>
         <IconButton edge="end" color="inherit" size="large">

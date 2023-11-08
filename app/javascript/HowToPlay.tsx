@@ -42,7 +42,7 @@ export const HowToPlay = () => {
         }}
       >
         <Typography variant="h2" align="center" color="primary">
-          How To Play:
+          How To Play
         </Typography>
         <Typography
           variant="h4"
@@ -100,7 +100,7 @@ export const HowToPlay = () => {
             size="large"
             variant="contained"
             color="secondary"
-            onClick={() => navigate("/puzzles/")}
+            onClick={() => navigate("/puzzles/0")}
           >
             Play!
           </Button>

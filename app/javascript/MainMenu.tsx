@@ -25,7 +25,7 @@ interface MainMenuProps {
 const MainMenu = ({ open, toggleOpen }: MainMenuProps) => {
   const puzzle = useStore((state) => state.currentPuzzle());
   const now = Date.now();
-  const puzzleDate = new Date(puzzle.published);
+  const puzzleDate = new Date(puzzle?.published);
 
   return (
     <Drawer
@@ -41,7 +41,7 @@ const MainMenu = ({ open, toggleOpen }: MainMenuProps) => {
       </Toolbar>
       <Divider />
       <List>
-        {puzzle.id > 1 ? (
+        {puzzle && puzzle.id > 1 ? (
           <ListItemButton
             component={Link}
             to={`/puzzles/${puzzle.id}-1`}
@@ -54,7 +54,7 @@ const MainMenu = ({ open, toggleOpen }: MainMenuProps) => {
             <ListItemText>Previous Puzzle</ListItemText>
           </ListItemButton>
         ) : null}
-        {now - puzzleDate.getTime() >= oneDay * 2 ? (
+        {puzzle && now - puzzleDate.getTime() >= oneDay * 2 ? (
           <ListItemButton
             component={Link}
             to={`/puzzles/${puzzle.id}+1`}
@@ -67,7 +67,7 @@ const MainMenu = ({ open, toggleOpen }: MainMenuProps) => {
             <ListItemText>Next Puzzle</ListItemText>
           </ListItemButton>
         ) : null}
-        {now - puzzleDate.getTime() >= oneDay ? (
+        {!puzzle || now - puzzleDate.getTime() >= oneDay ? (
           <ListItemButton
             component={Link}
             to="/puzzles/0"
