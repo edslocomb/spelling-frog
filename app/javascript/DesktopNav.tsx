@@ -7,8 +7,6 @@ import { useStore } from "./store";
 export const DesktopNav: React.FC = () => {
   const puzzle = useStore((state) => state.currentPuzzle());
   const navigate = useNavigate();
-  const goToNextPuzzle = () => navigate(`/puzzles/${puzzle.id + 1}`);
-  const goToPreviousPuzzle = () => navigate(`/puzzles/${puzzle.id - 1}`);
 
   if (!puzzle) {
     return null;
@@ -26,7 +24,7 @@ export const DesktopNav: React.FC = () => {
         size="small"
         onClick={(e) => {
           e.currentTarget.blur();
-          goToPreviousPuzzle();
+          navigate(`/puzzles/${puzzle.id}-1`);
         }}
       >
         <ArrowLeft color="primary" />
@@ -38,7 +36,7 @@ export const DesktopNav: React.FC = () => {
         size="small"
         onClick={(e) => {
           e.currentTarget.blur();
-          goToNextPuzzle();
+          navigate(`/puzzles/${puzzle.id}+1`);
         }}
       >
         <ArrowRight color="primary" />
