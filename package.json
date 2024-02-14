@@ -1,33 +1,37 @@
 {
-  "name": "app",
+  "name": "spelling-frog",
+  "version": "0.1",
+  "description": "A demo project, implementing a clone of the NY Times Spelling Bee puzzle",
+  "homepage": "https://github.com/edslocomb/spellin-bee#readme",
+  "license": "MIT",
   "dependencies": {
-    "@emotion/react": "^11.11.1",
+    "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
-    "@mui/icons-material": "^5.14.19",
-    "@mui/material": "^5.14.19",
+    "@mui/icons-material": "^5.15.10",
+    "@mui/material": "^5.15.10",
     "@types/react-router": "^5.1.20",
-    "esbuild": "^0.19.8",
+    "esbuild": "^0.20.0",
     "immer": "^10.0.3",
     "prop-types": "^15.8.1",
     "radash": "^11.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.1",
-    "typescript": "5.3.2",
-    "zustand": "^4.4.7"
+    "react-router-dom": "^6.22.0",
+    "typescript": "5.3.3",
+    "zustand": "^4.5.0"
   },
   "devDependencies": {
     "@types/es6-promise": "^3.3.0",
-    "@types/react": "^18.2.41",
-    "@types/react-dom": "^18.2.17",
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
     "@yarnpkg/sdks": "^3.1.0",
-    "eslint": "^8.55.0",
+    "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.33.2",
-    "prettier": "^3.1.0"
+    "prettier": "^3.2.5"
   },
   "eslintConfig": {
     "plugins": [
@@ -57,5 +61,5 @@
     "build": "esbuild app/javascript/*.* --bundle --minify --outdir=app/assets/builds --public-path=assets --loader:.woff=dataurl --loader:.woff2=dataurl",
     "build-dev": "esbuild app/javascript/*.* --bundle --watch --sourcemap --outdir=app/assets/builds --public-path=assets --loader:.woff=dataurl --loader:.woff2=dataurl"
   },
-  "packageManager": "yarn@4.0.2"
+  "packageManager": "yarn@4.1.0"
 }
