@@ -21,7 +21,6 @@ set :branch, "main"
 #   set :user, 'foobar'          # Username in the server to SSH to.
 #   set :port, '30000'           # SSH port number.
 #   set :forward_agent, true     # SSH forward_agent.
-set :ruby_version, ENV["RUBY_VERSION"]
 
 # Shared dirs and files will be symlinked into the app-folder by the 'deploy:link_shared_paths' step.
 # Some plugins already add folders to shared_dirs like `mina/rails` add `public/assets`, `vendor/bundle` and many more
@@ -37,14 +36,14 @@ task :remote_environment do
   # invoke :'rbenv:load'
 
   # For those using RVM, use this to load an RVM version@gemset.
-  invoke :"rvm:use", "#{ruby_version}@spelling_frog"
+  invoke :"rvm:use", "#{ENV["RUBY_VERSION"]}@spelling_frog"
 end
 
 # Put any custom commands you need to run at setup
 # All paths in `shared_dirs` and `shared_paths` will be created on their own.
 task :setup do
   # command %{rbenv install 2.5.3 --skip-existing}
-  command %(rvm install #{ruby_version})
+  command %(rvm install #{ENV["RUBY_VERSION"]})
   # command %{gem install bundler}
 end
 
