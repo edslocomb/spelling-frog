@@ -66,6 +66,6 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_caching = false
 
-  host = ENV["HOST"]
+  host = ENV["BROWSER_HOST"]
   config.hosts << "#{host}:#{ENV.fetch("PORT") { 3000 }}" if host
 end
