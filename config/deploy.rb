@@ -18,7 +18,6 @@ set :domain, ENV["PRODUCTION_SERVER"]
 set :deploy_to, "/var/www/spelling-frog"
 set :repository, "git@github.com:edslocomb/spelling-frog.git"
 set :branch, "main"
-set :execution_mode, :system
 
 # Optional settings:
 #   set :user, 'foobar'          # Username in the server to SSH to.
