@@ -5,6 +5,8 @@ require "mina/git"
 # require 'mina/rbenv'  # for rbenv support. (https://rbenv.org)
 require "mina/rvm"    # for rvm support. (https://rvm.io)
 
+ruby_version = File.read(".ruby-version").strip
+
 # Basic settings:
 #   domain       - The hostname to SSH to.
 #   deploy_to    - Path to deploy into.
@@ -16,6 +18,7 @@ set :domain, ENV["PRODUCTION_SERVER"]
 set :deploy_to, "/var/www/spelling-frog"
 set :repository, "git@github.com:edslocomb/spelling-frog.git"
 set :branch, "main"
+set :execution_mode, :system
 
 # Optional settings:
 #   set :user, 'foobar'          # Username in the server to SSH to.
@@ -36,14 +39,14 @@ task :remote_environment do
   # invoke :'rbenv:load'
 
   # For those using RVM, use this to load an RVM version@gemset.
-  invoke :"rvm:use", "#{ENV["RUBY_VERSION"]}@spelling_frog"
+  invoke :"rvm:use", "#{ruby_version}@spelling_frog"
 end
 
 # Put any custom commands you need to run at setup
 # All paths in `shared_dirs` and `shared_paths` will be created on their own.
 task :setup do
   # command %{rbenv install 2.5.3 --skip-existing}
-  command %(rvm install #{ENV["RUBY_VERSION"]})
+  command %(rvm install #{ruby_version})
   # command %{gem install bundler}
 end
 
