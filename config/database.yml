@@ -82,5 +82,7 @@ test:
 #
 production:
   <<: *default
-  database: spelling_frog_production
+  host: <%= ENV["SPELLING_FROG_DATABASE_HOST"] %>
+  database: spelling_frog
   username: spelling_frog
+  password: <%= ENV["SPELLING_FROG_DATABASE_PASSWORD"] %>
