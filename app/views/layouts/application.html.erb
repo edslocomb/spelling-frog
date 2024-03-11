@@ -11,7 +11,7 @@
   </head>
 
   <body>
-    <div id="app" />
+    <div id="app" relativeUrlRoot="<%= Rails.configuration.relative_url_root %>" />
     <%= yield %>
   </body>
 </html>

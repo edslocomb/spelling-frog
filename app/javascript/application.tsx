@@ -1,7 +1,7 @@
 import { StrictMode, useMemo } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
-import { router } from "./router";
+import { createRouter } from "./router";
 import { useMediaQuery, CssBaseline } from "@mui/material";
 import {
   createTheme,
@@ -36,7 +36,12 @@ const themeCustomizations = {
   },
 } as ThemeOptions;
 
-const Root = () => {
+interface RootProps {
+  relativeUrlRoot: string;
+}
+
+const Root = ({ relativeUrlRoot }: RootProps) => {
+  const router = createRouter({ relativeUrlRoot });
   const mode = useMediaQuery("(prefers-color-scheme: dark)") ? "dark" : "light";
   const modedTheme = assign(themeCustomizations, { palette: { mode: mode } });
   const theme = useMemo(
@@ -55,6 +60,8 @@ const Root = () => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  const root = createRoot(document.getElementById("app") as Element);
-  root.render(<Root />);
+  const rootElement = document.getElementById("app") as Element;
+  const relativeUrlRoot = rootElement?.getAttribute("relativeUrlRoot") || "";
+  const reactRoot = createRoot(rootElement);
+  reactRoot.render(<Root relativeUrlRoot={relativeUrlRoot} />);
 });
