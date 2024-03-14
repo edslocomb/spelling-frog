@@ -5,7 +5,7 @@ ruby "3.2.2"
 gem "rails", "7.0.8.1"
 
 gem "devise"
-gem "dotenv-rails"
+gem "dotenv"
 gem "jsbundling-rails"
 gem "pg", "~> 1.5"
 gem "propshaft"
