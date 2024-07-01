@@ -60,6 +60,7 @@ task :deploy do
     invoke :"deploy:link_shared_paths"
     invoke :"bundle:install"
     invoke :"rails:db_migrate"
+    command %(yes | corepack install) # make sure we have a current yarn
     invoke :"rails:assets_precompile"
     invoke :"deploy:cleanup"
 
