@@ -32,7 +32,7 @@ const DesktopHeader = ({ sx }: DesktopHeaderProps) => {
         />
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography variant="h1" color="primary.dark">
-            Spelling Frog{" "}
+            Spelling Frog
           </Typography>
           <DesktopNav />
         </Box>
