@@ -1,7 +1,7 @@
 class Word < ApplicationRecord
   include Lettered
 
-  has_many :puzzles_words
+  has_many :puzzles_words, dependent: :destroy
   has_many :puzzles, through: :puzzles_words
 
   validates :name, length: {minimum: 4}, uniqueness: true

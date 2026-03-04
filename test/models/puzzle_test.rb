@@ -55,7 +55,7 @@ class PuzzleTest < ActiveSupport::TestCase
       puzzle = Puzzle.find_by(letters: "abekmnt")
       assert_equal puzzle.required_letter, "b"
       assert_equal puzzle.words.map(&:to_s).sort, record["words"].sort
-      assert_equal puzzle.published_at, Time.new(1970, 4, 13)
+      assert_equal puzzle.published_at, Time.new(1970, 4, 13).getlocal
     end
 
     test "import doesn't create dupes" do

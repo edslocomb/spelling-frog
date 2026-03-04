@@ -6,7 +6,7 @@ import FoundWordsList from "./FoundWordsList";
 import FoundWordsDropdown from "./FoundWordsDropdown";
 import ScoreBar from "./ScoreBar";
 import GameBoard from "./gameboard";
-import { Puzzle } from "../types";
+import { type Puzzle } from "../types";
 
 const Puzzle = () => {
   useLoaderData();

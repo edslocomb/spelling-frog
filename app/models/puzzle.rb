@@ -15,17 +15,17 @@ class Puzzle < ApplicationRecord
 
     def scheduled
       where.not(published_at: nil)
-        .where(published_at: Time.now..)
+        .where(published_at: Time.current..)
     end
 
     def unpublished
       where(published_at: nil)
-        .or.where(published_at: Time.now..)
+        .or.where(published_at: Time.current..)
     end
 
     def published
       where.not(published_at: nil)
-        .where(published_at: ..Time.now)
+        .where(published_at: ..Time.current)
     end
 
     def latest
@@ -74,8 +74,8 @@ class Puzzle < ApplicationRecord
       words: "words",
       date: "date"
     })
-      required_letter = (record[keymap[:required_letter]] || record[keymap[:letters]].first)
-      letters = record[keymap[:letters]].chars.sort.join("")
+      required_letter = record[keymap[:required_letter]] || record[keymap[:letters]].first
+      letters = record[keymap[:letters]].chars.sort.join
       return if Puzzle.find_by(required_letter: required_letter, letters: letters)
 
       existing_words = Word.where(name: record[keymap[:words]])
@@ -102,7 +102,7 @@ class Puzzle < ApplicationRecord
   end
 
   def letters=(value)
-    self[:letters] = value&.split("")&.sort&.join("")
+    self[:letters] = value&.chars&.sort&.join
   end
 
   def score

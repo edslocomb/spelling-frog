@@ -8,20 +8,20 @@ module Lettered
 
   class_methods do
     def extract_letters(string)
-      string&.chars&.sort&.uniq&.join("")
+      string&.chars&.sort&.uniq&.join
     end
   end
 
   private
 
   def letters_are_unique
-    unless letters&.split("")&.uniq&.join("") == letters
+    unless letters&.chars&.uniq&.join == letters
       errors.add("letters can't contain the same letter twice")
     end
   end
 
   def letters_are_sorted
-    unless letters&.split("")&.sort&.join("") == letters
+    unless letters&.chars&.sort&.join == letters
       errors.add("letters must be in alphabetical order")
     end
   end
