@@ -2,25 +2,22 @@ source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.4.8"
-gem "rails", "7.2.3"
-
-# locked gems
-gem "minitest", "< 6.0" # v6 does not play well with Rails 7
+gem "rails", "8.1.2"
 
 gem "devise"
 gem "dotenv"
 gem "jsbundling-rails"
-gem "pg", "~> 1.5"
+gem "pg"
 gem "propshaft"
 gem "mina"
 
 group :production do
-  gem "passenger", ">= 5.3.2", require: "phusion_passenger/rack_handler"
+  gem "passenger", require: "phusion_passenger/rack_handler"
 end
 
 group :development, :test do
   gem "debug", platforms: %i[mri mingw x64_mingw]
-  gem "puma", ">= 5.0"
+  gem "puma"
 end
 
 group :development do
