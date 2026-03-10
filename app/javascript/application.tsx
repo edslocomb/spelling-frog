@@ -10,8 +10,7 @@ import {
   ThemeOptions,
 } from "@mui/material/styles";
 import { assign } from "radash";
-import green from "@mui/material/colors/green";
-import lightGreen from "@mui/material/colors/lightGreen";
+import { green, lightGreen } from "@mui/material/colors";
 
 import "@fontsource/roboto/latin-300.css";
 import "@fontsource/roboto/latin-400.css";

@@ -6,6 +6,7 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
+
 import { FoundWordsSummary } from "./FoundWordsSummary";
 import { usesAllLetters } from "./lib";
 
