@@ -78,6 +78,7 @@ const Puzzle = () => {
             maxHeight: "87%",
             padding: "5px 20px",
             marginBottom: "2%",
+            overflow: "auto",
           }}
         />
       </Box>
