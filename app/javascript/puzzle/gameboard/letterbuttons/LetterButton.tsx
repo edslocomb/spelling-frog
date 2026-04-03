@@ -14,6 +14,7 @@ export const LetterButton = ({
   const variant = required ? "contained" : "outlined";
   const color = required ? "secondary" : "inherit";
   const borderWidth = required ? {} : { borderWidth: "2px" };
+  const handleClick = () => addToGuess(letter);
 
   return (
     <Button
@@ -21,7 +22,7 @@ export const LetterButton = ({
       disableElevation
       variant={variant}
       color={color}
-      onClick={() => addToGuess(letter)}
+      onClick={handleClick}
       sx={{
         ...borderWidth,
         borderColor: "divider",
