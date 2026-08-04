@@ -117,7 +117,7 @@ export const GameBoard = ({ actions, puzzle, sx }: GameBoardProps) => {
     } else if (guess.length < 4) {
       error = "Too Short";
     } else if (!guess.split("").every((l) => letters.includes(l))) {
-      error = "Extraneous Letter";
+      error = "Letter not in puzzle";
     } else if (foundWords.includes(guess)) {
       error = "Already Found";
     } else if (!solutions.includes(guess)) {
@@ -136,7 +136,7 @@ export const GameBoard = ({ actions, puzzle, sx }: GameBoardProps) => {
           word: "",
           error: "",
         })),
-      1200,
+      800,
     );
     setGuessState({ ...guessState, error });
   };

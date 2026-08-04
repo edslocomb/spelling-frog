@@ -19,6 +19,7 @@ export const LetterButton = ({
   return (
     <Button
       centerRipple
+      disableTouchRipple
       disableElevation
       variant={variant}
       color={color}
@@ -29,8 +30,7 @@ export const LetterButton = ({
         borderRadius: "50%",
         fontSize: "1.5rem",
         fontWeight: 700,
-        marginTop: "5px",
-        marginBottom: "6px",
+        marginBottom: "0.5rem",
         width: "5rem",
         height: "5rem",
       }}

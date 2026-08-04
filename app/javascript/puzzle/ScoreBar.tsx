@@ -11,21 +11,22 @@ import {
   FrogCrouching,
   FrogJumping,
   FrogLanding,
-  FrogSmiling,
+  FrogDoodle,
+  FrogQueen,
 } from "../icons/";
 
 import { type Puzzle } from "../types";
 import { puzzleScore } from "./lib";
 
-const levels = [0.1, 0.25, 0.4, 0.55, 0.7];
+const winningFraction = 0.75;
+const levels = [0.08, 0.16, 0.33, 0.5, winningFraction];
 
 interface ScoreFrogProps extends SvgIconProps {
   level: number;
 }
+
 const ScoreFrog = ({ level, ...props }: ScoreFrogProps) => {
-  if (level >= levels[4]) {
-    return <FrogSmiling {...props} />;
-  } else if (level >= levels[3]) {
+  if (level >= levels[3]) {
     return <FrogLanding {...props} />;
   } else if (level >= levels[2]) {
     return <FrogJumping {...props} />;
@@ -36,14 +37,58 @@ const ScoreFrog = ({ level, ...props }: ScoreFrogProps) => {
   return <Frog {...props} />;
 };
 
-function frogOpacity(frogFraction: number, levelIndex: number) {
-  const level = levels[levelIndex];
-  if (frogFraction >= level) {
-    return 1.0;
-  }
-  const previousLevel = levels[levelIndex - 1] || 0;
-  return (0.2 * (frogFraction - previousLevel)) / (level - previousLevel);
+interface FrogressProps {
+  score: number;
+  maxScore: number;
+  winningScore: number;
+  sx?: SxProps<Theme>;
 }
+
+const Frogress = ({ score, maxScore, winningScore, sx }: FrogressProps) => {
+  const frogFraction = score / maxScore;
+
+  if (score >= winningScore) {
+    const message = score == maxScore ? "Queen!" : "Winner!";
+    const WinningIcon = score == maxScore ? FrogQueen : FrogDoodle;
+
+    return (
+      <Box sx={{ ...sx, justifyContent: "center" }}>
+        <WinningIcon
+          color="primary"
+          sx={{
+            "--size": { xs: "2.4ch", sm: "4ch" },
+            width: "var(--size)",
+            height: "var(--size)",
+            zIndex: -1,
+          }}
+        />
+        <Typography color="primary" variant="h3">
+          {message}
+        </Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ ...sx }}>
+      {levels
+        .filter((_level, i) => frogFraction >= (levels[i] || 0))
+        .map((level, i) => (
+          <ScoreFrog
+            level={level}
+            key={`level${level}`}
+            color="primary"
+            sx={{
+              "--size": { xs: "2.4ch", sm: "4ch" },
+              width: "var(--size)",
+              height: "var(--size)",
+              zIndex: -1,
+            }}
+          />
+        ))}
+    </Box>
+  );
+};
 
 interface ScoreBarProps {
   puzzle: Puzzle;
@@ -53,11 +98,8 @@ interface ScoreBarProps {
 export const ScoreBar = ({ sx, puzzle }: ScoreBarProps) => {
   const { maxScore } = puzzle;
   const score = puzzleScore(puzzle);
-  const winningScore = Math.round(maxScore * 0.7);
+  const winningScore = Math.round(maxScore * winningFraction);
   const displayedMax = score >= winningScore ? maxScore : winningScore;
-  // indulging in a game design reference with this next variable name
-  const frogFraction = score / maxScore;
-  const progressMultiplier = score >= winningScore ? 100 : 100 / 0.7;
 
   return (
     <Box
@@ -69,37 +111,29 @@ export const ScoreBar = ({ sx, puzzle }: ScoreBarProps) => {
     >
       <Box
         sx={{
+          display: "flex",
+          flexDirection: "column",
           flexGrow: 1,
           marginRight: "1ch",
-          height: "100%",
-          position: "relative",
         }}
       >
-        {levels
-          .filter((_level, i) => frogFraction >= (levels[i - 1] || 0))
-          .map((level, i) => (
-            <ScoreFrog
-              level={level}
-              key={`level${level}`}
-              color={frogFraction >= level ? "primary" : "inherit"}
-              opacity={frogOpacity(frogFraction, i)}
-              sx={{
-                position: "absolute",
-                "--size": { xs: "2.4ch", sm: "4ch" },
-                left: `calc(${level * progressMultiplier}% - var(--size))`,
-                bottom: "45%",
-                width: "var(--size)",
-                height: "var(--size)",
-                zIndex: -1,
-              }}
-            />
-          ))}
+        <Frogress
+          score={score}
+          maxScore={maxScore}
+          winningScore={winningScore}
+          sx={{
+            display: "flex",
+            "--size": { xs: "2.4ch", sm: "4ch" },
+            gap: "var(--size)",
+            alignItems: "center",
+            zIndex: -1,
+          }}
+        />
         <LinearProgress
           variant="determinate"
           value={(100 * score) / displayedMax}
           sx={{
             color: "primary.light",
-            top: "50%",
           }}
         />
       </Box>

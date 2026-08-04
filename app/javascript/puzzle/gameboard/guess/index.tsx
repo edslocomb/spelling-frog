@@ -11,7 +11,7 @@ const jiggly = keyframes`
   100% { translateX: 0 }
 `;
 
-const jiggler = `${jiggly} 0.15s 3`;
+const jiggler = `${jiggly} 0.12s 3`;
 
 interface GuessProps {
   jiggle?: boolean;
